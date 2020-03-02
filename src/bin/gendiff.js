@@ -2,8 +2,8 @@
 import program from 'commander';
 
 program
-  .version('1.0.1', '-v, --VERSION', 'output the version number')
-  .description('Compares two configuration files and shows a difference.'
-);
-// eslint-disable-next-line no-undef
-program.parse(process.argv);
+  .description('Compares two configuration files and shows a difference.')
+  .version('1.0.1', '-v, --version', 'output the version number')
+  .option('-f, --format [type]', 'output format')
+  // eslint-disable-next-line no-undef
+  .parse(process.argv);
