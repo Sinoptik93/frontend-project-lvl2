@@ -1,13 +1,13 @@
 env:
-  browser: true
-  es6: true
-extends: 'eslint:recommended'
-globals:
-  Atomics: readonly
-  SharedArrayBuffer: readonly
-parserOptions:
-  ecmaVersion: 2018
-  sourceType: module
+  node: true
+  jest: true
+extends:
+  - 'airbnb-base'
+  - 'plugin:jest/all'
+
 rules: 
   no-console: 0
   import/extensions: 0
+plugins: 
+  - jest
+  - babel
