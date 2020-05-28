@@ -35,21 +35,14 @@ const compareFunction = (file1, file2) => {
     }
   });
 
-  let string = '';
+  let stringifiedResult = '';
   // Make result string
-  for (let i = 0; i < compareResult.length; i += 1) {
-    if (i === 0) {
-      string = '{';
-    }
-    const stringData = compareResult[i];
+  compareResult.forEach((stringData) => {
     const compareResultString = `${stringData[0]} ${stringData[1]}: ${stringData[2]}`;
-    string = `${string}\n${compareResultString}`;
-    if (i === compareResult.length - 1) {
-      string = `${string}\n}`;
-    }
-  }
-  console.log(string);
-  return string;
+    stringifiedResult = `${stringifiedResult}\n${compareResultString}`;
+  });
+  console.log(`{${stringifiedResult}\n}`);
+  return `{${stringifiedResult}\n}`;
 };
 
 const gendiff = (filepath1, filepath2) => {
