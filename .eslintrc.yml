@@ -8,8 +8,6 @@ extends:
 rules: 
   no-console: 0
   import/extensions: 0
-  no-restricted-syntax: 0
-  no-prototype-builtins: 0
 plugins: 
   - jest
   - babel
