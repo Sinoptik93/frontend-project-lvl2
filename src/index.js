@@ -5,10 +5,12 @@ import process from 'process';
 const compareFunction = (file1, file2) => {
   const compareResult = [];
   const allKeys = [...new Set([...Object.keys(file1), ...Object.keys(file2)])];
+  // Lint error: https://eslint.org/docs/rules/no-prototype-builtins
+  const hasProperty = (file, key) => Object.prototype.hasOwnProperty.call(file, key);
 
-  for (const key of allKeys) {
+  allKeys.forEach((key) => {
     // Similar keys and ...
-    if (file1.hasOwnProperty(key) && file2.hasOwnProperty(key)) {
+    if (hasProperty(file1, key) && hasProperty(file2, key)) {
       // similar values.
       if (file1[key] === file2[key]) {
         compareResult.push([' ', key, file1[key]]);
@@ -24,14 +26,14 @@ const compareFunction = (file1, file2) => {
           compareResult.push(['-', key, valueSmaller], ['+', key, valueGreater]);
         }
       }
-    } else if (file1.hasOwnProperty(key) && !file2.hasOwnProperty(key)) {
+    } else if (hasProperty(file1, key) && !hasProperty(file2, key)) {
       // No key in file2.
       compareResult.push(['-', key, file1[key]]);
     } else {
       // No key in file1.
       compareResult.push(['+', key, file2[key]]);
     }
-  }
+  });
 
   let string = '';
   // Make result string
