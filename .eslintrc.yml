@@ -3,7 +3,7 @@ env:
   jest: true
 extends:
   - 'airbnb-base'
-  - 'plugin:jest/all'
+  - 'plugin:jest/recommended'
 
 rules: 
   no-console: 0
