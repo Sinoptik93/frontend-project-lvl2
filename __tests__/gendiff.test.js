@@ -11,7 +11,7 @@ const example = (
 + verbose: true
 }`);
 
-const relativePathTo = (fileName) => path.join('__tests__', '__fixtures__', fileName);
+const relativePathTo = (fileName) => `./__tests__/__fixtures__/${fileName}`;
 const absolutePathTo = (fileName) => path.join(__dirname, '__fixtures__', fileName);
 const testFiles = [
   ['before.json', 'after.json', 'JSON'],
