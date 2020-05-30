@@ -11,24 +11,19 @@ const example = (
 }`);
 
 describe('gendiff test', () => {
+  const relativePathTo = (fileName) => `./__tests__/__fixtures__/${fileName}`;
+  const absolutePathTo = (fileName) => `${__dirname}/__fixtures__/${fileName}`;
+
   test('JSON relative path', () => {
-    const relativePath1 = './__tests__/__fixtures__/before.json';
-    const relativePath2 = './__tests__/__fixtures__/after.json';
-    expect(gendiff(relativePath1, relativePath2)).toMatch(example);
+    expect(gendiff(relativePathTo('before.json'), relativePathTo('after.json'))).toMatch(example);
   });
   test('JSON absolute path', () => {
-    const absolutePath1 = `${__dirname}/__fixtures__/before.json`;
-    const absolutePath2 = `${__dirname}/__fixtures__/after.json`;
-    expect(gendiff(absolutePath1, absolutePath2)).toMatch(example);
+    expect(gendiff(absolutePathTo('before.json'), absolutePathTo('after.json'))).toMatch(example);
   });
   test('YAML relative path', () => {
-    const relativePath1 = './__tests__/__fixtures__/before.yml';
-    const relativePath2 = './__tests__/__fixtures__/after.yml';
-    expect(gendiff(relativePath1, relativePath2)).toMatch(example);
+    expect(gendiff(relativePathTo('before.yml'), relativePathTo('after.yml'))).toMatch(example);
   });
   test('YAML absolute path', () => {
-    const absolutePath1 = `${__dirname}/__fixtures__/before.yml`;
-    const absolutePath2 = `${__dirname}/__fixtures__/after.yml`;
-    expect(gendiff(absolutePath1, absolutePath2)).toMatch(example);
+    expect(gendiff(absolutePathTo('before.yml'), absolutePathTo('after.yml'))).toMatch(example);
   });
 });
