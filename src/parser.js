@@ -10,17 +10,11 @@ const parseKeys = (file1, file2) => {
       // similar values.
       if (file1[key] === file2[key]) {
         compareResult.push([' ', key, file1[key]]);
-      } else {
+      } else if (file1[key] > file2[key]) {
         // different values.
-        let valueGreater;
-        let valueSmaller;
-        if (file1[key] > file2[key]) {
-          [valueGreater, valueSmaller] = [file1[key], file2[key]];
-          compareResult.push(['+', key, valueSmaller], ['-', key, valueGreater]);
-        } else {
-          [valueSmaller, valueGreater] = [file1[key], file2[key]];
-          compareResult.push(['-', key, valueSmaller], ['+', key, valueGreater]);
-        }
+        compareResult.push(['+', key, file2[key]], ['-', key, file1[key]]);
+      } else {
+        compareResult.push(['-', key, file1[key]], ['+', key, file2[key]]);
       }
     } else if (hasProperty(file1, key) && !hasProperty(file2, key)) {
       // No key in file2.
