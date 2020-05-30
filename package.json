@@ -26,7 +26,8 @@
   "homepage": "https://github.com/Sinoptik93/frontend-project-lvl2#readme",
   "dependencies": {
     "commander": "^4.1.1",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "js-yaml": "^3.14.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
