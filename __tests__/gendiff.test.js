@@ -10,16 +10,28 @@ const example = (
 + verbose: true
 }`);
 
-describe('gendiff test', () => {
+describe('JSON gendiff test', () => {
   test('relative path', () => {
     const relativePath1 = './__tests__/__fixtures__/before.json';
     const relativePath2 = './__tests__/__fixtures__/after.json';
     expect(gendiff(relativePath1, relativePath2)).toMatch(example);
   });
   test('absolute path', () => {
-    console.log(__dirname);
     const absolutePath1 = `${__dirname}/__fixtures__/before.json`;
     const absolutePath2 = `${__dirname}/__fixtures__/after.json`;
+    expect(gendiff(absolutePath1, absolutePath2)).toMatch(example);
+  });
+});
+
+describe('YAML gendiff test', () => {
+  test('relative path', () => {
+    const relativePath1 = './__tests__/__fixtures__/before.yml';
+    const relativePath2 = './__tests__/__fixtures__/after.yml';
+    expect(gendiff(relativePath1, relativePath2)).toMatch(example);
+  });
+  test('absolute path', () => {
+    const absolutePath1 = `${__dirname}/__fixtures__/before.yml`;
+    const absolutePath2 = `${__dirname}/__fixtures__/after.yml`;
     expect(gendiff(absolutePath1, absolutePath2)).toMatch(example);
   });
 });
