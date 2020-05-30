@@ -1,3 +1,4 @@
+import path from 'path';
 import gendiff from '../src/index.js';
 
 const example = (
@@ -11,8 +12,8 @@ const example = (
 }`);
 
 describe('gendiff test', () => {
-  const relativePathTo = (fileName) => `./__tests__/__fixtures__/${fileName}`;
-  const absolutePathTo = (fileName) => `${__dirname}/__fixtures__/${fileName}`;
+  const relativePathTo = (fileName) => path.join('__tests__', '__fixtures__', fileName);
+  const absolutePathTo = (fileName) => path.join(__dirname, '__fixtures__', fileName);
 
   test('JSON relative path', () => {
     expect(gendiff(relativePathTo('before.json'), relativePathTo('after.json'))).toMatch(example);
@@ -25,5 +26,11 @@ describe('gendiff test', () => {
   });
   test('YAML absolute path', () => {
     expect(gendiff(absolutePathTo('before.yml'), absolutePathTo('after.yml'))).toMatch(example);
+  });
+  test('INI relative path', () => {
+    expect(gendiff(relativePathTo('before.ini'), relativePathTo('after.ini'))).toMatch(example);
+  });
+  test('INI absolute path', () => {
+    expect(gendiff(absolutePathTo('before.ini'), absolutePathTo('after.ini'))).toMatch(example);
   });
 });
