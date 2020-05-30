@@ -1,5 +1,6 @@
 import path from 'path';
 import gendiff from '../src/index.js';
+import { AssertionError } from 'assert';
 
 const example = (
   `{
@@ -11,26 +12,20 @@ const example = (
 + verbose: true
 }`);
 
-describe('gendiff test', () => {
-  const relativePathTo = (fileName) => path.join('__tests__', '__fixtures__', fileName);
-  const absolutePathTo = (fileName) => path.join(__dirname, '__fixtures__', fileName);
+const relativePathTo = (fileName) => path.join('__tests__', '__fixtures__', fileName);
+const absolutePathTo = (fileName) => path.join(__dirname, '__fixtures__', fileName);
+const testFiles = [
+  ['before.json', 'after.json'],
+  ['before.yml', 'after.yml'],
+  ['before.ini', 'after.ini'],
+];
 
-  test('JSON relative path', () => {
-    expect(gendiff(relativePathTo('before.json'), relativePathTo('after.json'))).toMatch(example);
+
+describe('Gendiff test', () => {
+  test.each(testFiles)('relative path | %s %s', (file1, file2) => {
+    expect(gendiff(relativePathTo(file1), relativePathTo(file2))).toMatch(example);
   });
-  test('JSON absolute path', () => {
-    expect(gendiff(absolutePathTo('before.json'), absolutePathTo('after.json'))).toMatch(example);
-  });
-  test('YAML relative path', () => {
-    expect(gendiff(relativePathTo('before.yml'), relativePathTo('after.yml'))).toMatch(example);
-  });
-  test('YAML absolute path', () => {
-    expect(gendiff(absolutePathTo('before.yml'), absolutePathTo('after.yml'))).toMatch(example);
-  });
-  test('INI relative path', () => {
-    expect(gendiff(relativePathTo('before.ini'), relativePathTo('after.ini'))).toMatch(example);
-  });
-  test('INI absolute path', () => {
-    expect(gendiff(absolutePathTo('before.ini'), absolutePathTo('after.ini'))).toMatch(example);
+  test.each(testFiles)('absolute path | %s %s', (file1, file2) => {
+    expect(gendiff(absolutePathTo(file1), absolutePathTo(file2))).toMatch(example);
   });
 });
