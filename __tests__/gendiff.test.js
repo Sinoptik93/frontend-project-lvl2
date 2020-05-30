@@ -1,6 +1,5 @@
 import path from 'path';
 import gendiff from '../src/index.js';
-import { AssertionError } from 'assert';
 
 const example = (
   `{
@@ -15,17 +14,14 @@ const example = (
 const relativePathTo = (fileName) => path.join('__tests__', '__fixtures__', fileName);
 const absolutePathTo = (fileName) => path.join(__dirname, '__fixtures__', fileName);
 const testFiles = [
-  ['before.json', 'after.json'],
-  ['before.yml', 'after.yml'],
-  ['before.ini', 'after.ini'],
+  ['before.json', 'after.json', 'JSON'],
+  ['before.yml', 'after.yml', 'YAML'],
+  ['before.ini', 'after.ini', 'INI'],
 ];
 
-
 describe('Gendiff test', () => {
-  test.each(testFiles)('relative path | %s %s', (file1, file2) => {
+  test.each(testFiles)('%s %s | %s format (relative/absolute path):', (file1, file2) => {
     expect(gendiff(relativePathTo(file1), relativePathTo(file2))).toMatch(example);
-  });
-  test.each(testFiles)('absolute path | %s %s', (file1, file2) => {
     expect(gendiff(absolutePathTo(file1), absolutePathTo(file2))).toMatch(example);
   });
 });
