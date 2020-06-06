@@ -25,13 +25,14 @@ const parseKeys = (file1, file2) => {
     }
   });
 
-  let stringifiedResult = '';
-  // Make result string
-  compareResult.forEach((stringData) => {
-    const compareResultString = `${stringData[0]} ${stringData[1]}: ${stringData[2]}`;
-    stringifiedResult = `${stringifiedResult}\n${compareResultString}`;
-  });
-  return `{${stringifiedResult}\n}`;
+  // let stringifiedResult = '';
+  // // Make result string
+  // compareResult.forEach((stringData) => {
+  //   const compareResultString = `${stringData[0]} ${stringData[1]}: ${stringData[2]}`;
+  //   stringifiedResult = `${stringifiedResult}\n${compareResultString}`;
+  // });
+  // return `{${stringifiedResult}\n}`;
+  return compareResult;
 };
 
 export default parseKeys;
