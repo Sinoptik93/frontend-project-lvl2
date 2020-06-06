@@ -3,7 +3,8 @@ import yaml from 'js-yaml';
 import ini from 'ini';
 import path from 'path';
 import process from 'process';
-import parseKeys from './parser.js';
+import stylish from './stylish.js';
+import getDiff from './getDiff.js';
 
 const normolizePath = (filepath) => {
   if (filepath.slice(0, 2) === './' || filepath.slice(0, 3) === '../') {
@@ -41,10 +42,13 @@ const gendiff = (filepath1, filepath2) => {
   const parsedFile1 = fileParser1(fs.readFileSync(normolizePath(filepath1), 'utf-8'));
   const parsedFile2 = fileParser2(fs.readFileSync(normolizePath(filepath2), 'utf-8'));
 
-  const result = parseKeys(parsedFile1, parsedFile2);
-
-  console.log(result);
-  return result;
+  const result = getDiff(parsedFile1, parsedFile2);
+  const styledResult = stylish(result);
+  return styledResult;
 };
+
+// TEST
+const relativePathTo = (fileName) => `./__tests__/__fixtures__/${fileName}`;
+gendiff(relativePathTo('beforeTree.json'), relativePathTo('afterTree.json'));
 
 export default gendiff;
