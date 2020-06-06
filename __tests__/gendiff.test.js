@@ -3,50 +3,49 @@ import gendiff from '../src/index.js';
 
 const example = (
   `{
-  host: hexlet.io
-+ timeout: 20
-- timeout: 50
-- proxy: 123.234.53.22
-- follow: false
-+ verbose: true
+    host: hexlet.io
+  - timeout: 50
+  + timeout: 20
+  - proxy: 123.234.53.22
+  - follow: false
+  + verbose: true
 }`);
 
 const exampleTree = (
   `{
-  common: {
-    + follow: false
-      setting1: Value 1
-    - setting2: 200
-    - setting3: true
-    + setting3: {
-          key: value
-      }
-      setting6: {
-          key: value
-        + ops: vops
-      }
-    + setting4: blah blah
-    + setting5: {
-          key5: value5
-      }
-  }
-  group1: {
-    + baz: bars
-    - baz: bas
-      foo: bar
-    - nest: {
-          key: value
-      }
-    + nest: str
-  }
-- group2: {
-      abc: 12345
-  }
-+ group3: {
-      fee: 100500
-  }
+    common: {
+        setting1: Value 1
+      - setting2: 200
+      - setting3: true
+      + setting3: {
+            key: value
+        }
+        setting6: {
+            key: value
+          + ops: vops
+        }
+      + follow: false
+      + setting4: blah blah
+      + setting5: {
+            key5: value5
+        }
+    }
+    group1: {
+      - baz: bas
+      + baz: bars
+        foo: bar
+      - nest: {
+            key: value
+        }
+      + nest: str
+    }
+    - group2: {
+        abc: 12345
+    }
+    + group3: {
+        fee: 100500
+    }
 }`);
-
 
 const relativePathTo = (fileName) => `./__tests__/__fixtures__/${fileName}`;
 const absolutePathTo = (fileName) => path.join(__dirname, '__fixtures__', fileName);
