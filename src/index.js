@@ -8,6 +8,7 @@ import getDiff from './services/getDiff.js';
 
 const isValid = (filepath) => filepath.slice(0, 2) === './' || filepath.slice(0, 3) === '../';
 
+// Initial step3
 const normalizePath = (filepath) => (
   isValid(filepath)
     ? path.resolve(process.cwd(), filepath)
