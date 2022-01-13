@@ -6,7 +6,6 @@ import process from 'process';
 import stylish from './services/stylish.js';
 import getDiff from './services/getDiff.js';
 
-// Initial step 2
 const isValid = (filepath) => filepath.slice(0, 2) === './' || filepath.slice(0, 3) === '../';
 
 const normalizePath = (filepath) => (
