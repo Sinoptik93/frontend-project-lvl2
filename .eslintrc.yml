@@ -4,10 +4,10 @@ env:
 extends:
   - 'airbnb-base'
   - 'plugin:jest/recommended'
-
-rules: 
+  - 'plugin:import/recommended'
+rules:
   no-console: 0
   import/extensions: 0
-plugins: 
+plugins:
   - jest
   - babel

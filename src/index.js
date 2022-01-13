@@ -3,8 +3,8 @@ import yaml from 'js-yaml';
 import ini from 'ini';
 import path from 'path';
 import process from 'process';
-import stylish from './stylish.js';
-import getDiff from './getDiff.js';
+import stylish from './services/stylish.js';
+import getDiff from './services/getDiff.js';
 
 const isValid = (filepath) => filepath.slice(0, 2) === './' || filepath.slice(0, 3) === '../';
 
