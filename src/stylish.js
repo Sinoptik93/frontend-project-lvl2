@@ -10,12 +10,12 @@ const stringifyData = (currentValue, level) => {
   if (typeof currentValue === 'object') {
     const entries = Object.entries(currentValue);
     // MAKE HERE
-    const stringifiedObject = entries.map(([key, value]) => {
+    const stringifyObject = entries.map(([key, value]) => {
       const currentIndent = makeIndent(level - 1);
       return `${currentIndent}  ${key}: ${value}`;
     });
     return `{
-        ${stringifiedObject.join('\n')}
+        ${stringifyObject.join('\n')}
     ${makeIndent(level - 1)}  }`;
   }
   return currentValue;
@@ -57,6 +57,7 @@ const stylish = (rawData, level = 0) => {
       stylishedString = `${currentIndent}+ ${currentLine.key}: ${stringifyData(currentLine.value, level + 1)}`;
       return stylishedString;
     }
+    return '';
   });
 
   stylishResult = stylishResult.flat().join('\n');
