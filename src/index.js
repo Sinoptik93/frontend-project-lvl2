@@ -6,14 +6,13 @@ import process from 'process';
 import stylish from './stylish.js';
 import getDiff from './getDiff.js';
 
-const normolizePath = (filepath) => {
-  if (filepath.slice(0, 2) === './' || filepath.slice(0, 3) === '../') {
-    const currentDirectory = process.cwd();
-    const absolutePath = path.resolve(currentDirectory, filepath);
-    return absolutePath;
-  }
-  return filepath;
-};
+const isValid = (filepath) => filepath.slice(0, 2) === './' || filepath.slice(0, 3) === '../';
+
+const normalizePath = (filepath) => (
+  isValid(filepath)
+    ? path.resolve(process.cwd(), filepath)
+    : filepath
+);
 
 const chooseParserBy = (filepath) => {
   let parse;
@@ -30,7 +29,7 @@ const chooseParserBy = (filepath) => {
       parse = ini.parse;
       break;
     default:
-      throw new Error(`Unknown file extention '${fileFormat}'.\nPlease, check file at directory: ${filepath}`);
+      throw new Error(`Unknown file extension '${fileFormat}'.\nPlease, check file at directory: ${filepath}`);
   }
   return parse;
 };
@@ -39,16 +38,13 @@ const gendiff = (filepath1, filepath2) => {
   const fileParser1 = chooseParserBy(filepath1);
   const fileParser2 = chooseParserBy(filepath2);
 
-  const parsedFile1 = fileParser1(fs.readFileSync(normolizePath(filepath1), 'utf-8'));
-  const parsedFile2 = fileParser2(fs.readFileSync(normolizePath(filepath2), 'utf-8'));
+  const parsedFile1 = fileParser1(fs.readFileSync(normalizePath(filepath1), 'utf-8'));
+  const parsedFile2 = fileParser2(fs.readFileSync(normalizePath(filepath2), 'utf-8'));
 
   const result = getDiff(parsedFile1, parsedFile2);
-  const styledResult = stylish(result);
-  return styledResult;
+  return stylish(result);
 };
 
-// TEST
-const relativePathTo = (fileName) => `./__tests__/__fixtures__/${fileName}`;
-gendiff(relativePathTo('beforeTree.json'), relativePathTo('afterTree.json'));
+console.log(path.resolve());
 
 export default gendiff;

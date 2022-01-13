@@ -1,7 +1,7 @@
-import { has, union } from 'lodash';
+import _ from 'lodash';
 
 const getDiff = (file1, file2) => {
-  const allKeys = union([...Object.keys(file1), ...Object.keys(file2)]);
+  const allKeys = _.union([...Object.keys(file1), ...Object.keys(file2)]);
 
   return allKeys.map((key) => {
     if (typeof file1[key] === 'object' && typeof file2[key] === 'object') {
@@ -12,7 +12,7 @@ const getDiff = (file1, file2) => {
       };
     }
 
-    if (!has(file1, key)) {
+    if (!_.has(file1, key)) {
       return {
         key,
         value: file2[key],
@@ -20,7 +20,7 @@ const getDiff = (file1, file2) => {
       };
     }
 
-    if (!has(file2, key)) {
+    if (!_.has(file2, key)) {
       return {
         key,
         value: file1[key],

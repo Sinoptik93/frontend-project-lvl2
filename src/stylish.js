@@ -1,4 +1,3 @@
-
 const makeIndent = (levelCount = 0) => {
   const indentChar = ' ';
   if (levelCount === 0) {
@@ -50,7 +49,7 @@ const stylish = (rawData, level = 0) => {
     }
     if (currentLine.status === 'removed') {
       const currentIndent = makeIndent(level + 1);
-      stylishedString = `${currentIndent}- ${currentLine.key}: ${stringifyData(currentLine.value, level + git 1)}`;
+      stylishedString = `${currentIndent}- ${currentLine.key}: ${stringifyData(currentLine.value, level + 1)}`;
       return stylishedString;
     }
     if (currentLine.status === 'added') {
