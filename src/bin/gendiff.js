@@ -10,4 +10,5 @@ program
   .action((pathfile1, pathfile2) => {
     gendiff(pathfile1, pathfile2);
   })
+
   .parse(process.argv);

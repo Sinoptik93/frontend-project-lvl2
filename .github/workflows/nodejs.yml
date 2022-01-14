@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [13.x]
+        node-version: [16.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -22,9 +22,9 @@ jobs:
           npm install
           make lint
       - name: Test & publish code coverage
-        uses: paambaati/codeclimate-action@v2.6.0
+        uses: paambaati/codeclimate-action@v3.0.0
         env:
-          CC_TEST_REPORTER_ID: ${{ secrets.TEST_REPORTER_ID }}
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
           coverageCommand: make test-coverage
           debug: true
