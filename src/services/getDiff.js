@@ -1,5 +1,11 @@
 import _ from 'lodash';
 
+/**
+ * Get diff array.
+ * @param file1{JSON}
+ * @param file2{JSON}
+ * @returns {{key: string, value: any, status: string}}
+ */
 const getDiff = (file1, file2) => {
   const allKeys = _.union([...Object.keys(file1), ...Object.keys(file2)]);
 
