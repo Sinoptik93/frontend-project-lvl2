@@ -19,23 +19,21 @@ const element = {
  */
 const stylish = (dataList, level = 0) => {
   const result = [];
-  const getNewLine = (list, index) => (index === list.length - 1 ? '' : '\n');
-
-  dataList.forEach((data, i) => {
+  dataList.forEach((data) => {
     const { key, value, status } = data;
 
     if (status === 'updated') {
       const [beforeString, afterString] = element[status](key, value);
-      result.push(`${beforeString}\n${afterString}${getNewLine(dataList, i)}`);
+      result.push(`${beforeString}\n${afterString}`);
     } else {
       const string = element[status](key, value);
-      result.push(`${string}${getNewLine(dataList, i)}`);
+      result.push(`${string}`);
     }
   });
   console.log(`level=${level}\n`);
   console.log(result);
 
-  return result;
+  return `{\n${result.join('\n')}\n}`;
 };
 
 export default stylish;
