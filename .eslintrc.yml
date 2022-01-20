@@ -11,7 +11,7 @@ rules:
   no-console: 0
   import/extensions: 0
   max-len: [
-      "error",
+      1,
       {
         "ignoreComments": true
       }
