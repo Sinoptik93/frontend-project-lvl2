@@ -18,17 +18,14 @@ const testFilesIni = {
 
 const resultFlat = [
   {
+    key: 'follow',
+    status: 'removed',
+    value: false,
+  },
+  {
     key: 'host',
     status: 'unchanged',
     value: 'hexlet.io',
-  },
-  {
-    key: 'timeout',
-    status: 'updated',
-    value: [
-      50,
-      20,
-    ],
   },
   {
     key: 'proxy',
@@ -36,9 +33,9 @@ const resultFlat = [
     value: '123.234.53.22',
   },
   {
-    key: 'follow',
-    status: 'removed',
-    value: false,
+    key: 'timeout',
+    status: 'updated',
+    value: { before: 50, after: 20 },
   },
   {
     key: 'verbose',
@@ -48,17 +45,14 @@ const resultFlat = [
 ];
 const resultIniFlat = [
   {
+    key: 'follow',
+    status: 'removed',
+    value: false,
+  },
+  {
     key: 'host',
     status: 'unchanged',
     value: 'hexlet.io',
-  },
-  {
-    key: 'timeout',
-    status: 'updated',
-    value: [
-      '50',
-      '20',
-    ],
   },
   {
     key: 'proxy',
@@ -66,9 +60,9 @@ const resultIniFlat = [
     value: '123.234.53.22',
   },
   {
-    key: 'follow',
-    status: 'removed',
-    value: false,
+    key: 'timeout',
+    status: 'updated',
+    value: { before: '50', after: '20' },
   },
   {
     key: 'verbose',
@@ -82,6 +76,11 @@ const resultNested = [
     status: 'nested',
     value: [
       {
+        key: 'follow',
+        status: 'added',
+        value: false,
+      },
+      {
         key: 'setting1',
         status: 'unchanged',
         value: 'Value 1',
@@ -94,45 +93,7 @@ const resultNested = [
       {
         key: 'setting3',
         status: 'updated',
-        value: [
-          true,
-          null,
-        ],
-      },
-      {
-        key: 'setting6',
-        status: 'nested',
-        value: [
-          {
-            key: 'key',
-            status: 'unchanged',
-            value: 'value',
-          },
-          {
-            key: 'doge',
-            status: 'nested',
-            value: [
-              {
-                key: 'wow',
-                status: 'updated',
-                value: [
-                  '',
-                  'so much',
-                ],
-              },
-            ],
-          },
-          {
-            key: 'ops',
-            status: 'added',
-            value: 'vops',
-          },
-        ],
-      },
-      {
-        key: 'follow',
-        status: 'added',
-        value: false,
+        value: { before: true, after: null },
       },
       {
         key: 'setting4',
@@ -146,6 +107,33 @@ const resultNested = [
           key5: 'value5',
         },
       },
+      {
+        key: 'setting6',
+        status: 'nested',
+        value: [
+          {
+            key: 'doge',
+            status: 'nested',
+            value: [
+              {
+                key: 'wow',
+                status: 'updated',
+                value: { before: '', after: 'so much' },
+              },
+            ],
+          },
+          {
+            key: 'key',
+            status: 'unchanged',
+            value: 'value',
+          },
+          {
+            key: 'ops',
+            status: 'added',
+            value: 'vops',
+          },
+        ],
+      },
     ],
   },
   {
@@ -155,10 +143,7 @@ const resultNested = [
       {
         key: 'baz',
         status: 'updated',
-        value: [
-          'bas',
-          'bars',
-        ],
+        value: { before: 'bas', after: 'bars' },
       },
       {
         key: 'foo',
@@ -168,12 +153,7 @@ const resultNested = [
       {
         key: 'nest',
         status: 'updated',
-        value: [
-          {
-            key: 'value',
-          },
-          'str',
-        ],
+        value: { before: { key: 'value' }, after: 'str' },
       },
     ],
   },
@@ -203,18 +183,38 @@ const resultNested = [
 
 describe('|Get different flat|', () => {
   test('.json:', () => {
-    expect(getDiff(testFilesJson.before, testFilesJson.after)).toStrictEqual(resultFlat);
+    expect(getDiff(
+      testFilesJson.before,
+      testFilesJson.after,
+    ))
+      .toStrictEqual(resultFlat);
   });
   test('.yml:', () => {
-    expect(getDiff(testFilesYml.before, testFilesYml.after)).toStrictEqual(resultFlat);
+    expect(
+      getDiff(testFilesYml.before,
+        testFilesYml.after),
+    )
+      .toStrictEqual(resultFlat);
   });
   test('.ini:', () => {
-    expect(getDiff(testFilesIni.before, testFilesIni.after)).toStrictEqual(resultIniFlat);
+    expect(
+      getDiff(
+        testFilesIni.before,
+        testFilesIni.after,
+      ),
+    )
+      .toStrictEqual(resultIniFlat);
   });
 });
 
 describe('|Get different nested|', () => {
   test('.json:', () => {
-    expect(getDiff(testFilesJson.beforeTree, testFilesJson.afterTree)).toStrictEqual(resultNested);
+    expect(
+      getDiff(
+        testFilesJson.beforeTree,
+        testFilesJson.afterTree,
+      ),
+    )
+      .toStrictEqual(resultNested);
   });
 });

@@ -4,16 +4,20 @@ import _ from 'lodash';
  * Get diff array.
  * @param file1{JSON}
  * @param file2{JSON}
- * @returns {{key: string, value: any, status: string}}
+ * @returns {{key: string, value: any, status: string}[]}
  */
 const getDiff = (file1, file2) => {
-  const allKeys = _.union([...Object.keys(file1), ...Object.keys(file2)]);
+  const keysList = [...Object.keys(file1), ...Object.keys(file2)];
+  const totalKeys = _.union(keysList).sort();
 
-  return allKeys.map((key) => {
-    if (typeof file1[key] === 'object' && typeof file2[key] === 'object') {
+  return totalKeys.map((key) => {
+    const valueBefore = file1[key];
+    const valueAfter = file2[key];
+
+    if (_.isPlainObject(valueBefore) && _.isPlainObject(valueAfter)) {
       return {
         key,
-        value: getDiff(file1[key], file2[key]),
+        value: getDiff(valueBefore, valueAfter),
         status: 'nested',
       };
     }
@@ -21,7 +25,7 @@ const getDiff = (file1, file2) => {
     if (!_.has(file1, key)) {
       return {
         key,
-        value: file2[key],
+        value: valueAfter,
         status: 'added',
       };
     }
@@ -29,22 +33,22 @@ const getDiff = (file1, file2) => {
     if (!_.has(file2, key)) {
       return {
         key,
-        value: file1[key],
+        value: valueBefore,
         status: 'removed',
       };
     }
 
-    if ((typeof file1[key] !== typeof file2[key]) || (file1[key] !== file2[key])) {
+    if (!_.isEqual(valueBefore, valueAfter)) {
       return {
         key,
-        value: [file1[key], file2[key]],
+        value: { before: valueBefore, after: valueAfter },
         status: 'updated',
       };
     }
 
     return {
       key,
-      value: file1[key],
+      value: valueBefore,
       status: 'unchanged',
     };
   });
