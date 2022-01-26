@@ -1,68 +1,82 @@
-const makeIndent = (levelCount = 0) => {
-  const indentChar = ' ';
-  if (levelCount === 0) {
-    return '';
-  }
-  return indentChar.repeat(4 * levelCount - 2);
+import _ from 'lodash';
+
+const getObjectPlain = (item) => {
+  console.log('getObj');
+  return [JSON.stringify(item)];
 };
 
-const stringifyData = (currentValue, level) => {
-  if (typeof currentValue === 'object') {
-    const entries = Object.entries(currentValue);
-    // MAKE HERE
-    const stringifyObject = entries.map(([key, value]) => {
-      const currentIndent = makeIndent(level - 1);
-      return `${currentIndent}  ${key}: ${value}`;
-    });
-    return `{
-        ${stringifyObject.join('\n')}
-    ${makeIndent(level - 1)}  }`;
-  }
-  return currentValue;
+const stringMaker = (level) => {
+  const indent = '    ';
+  const levelIndent = indent.repeat(level);
+
+  return {
+    unchanged: (key, value) => `${levelIndent}    ${key}: ${value}`,
+    updated: (key, value) => {
+      const beforeString = `${levelIndent}  - ${key}: ${value.before}`;
+      const afterString = `${levelIndent}  + ${key}: ${value.after}`;
+
+      return `${beforeString}\n${afterString}`;
+    },
+    removed: (key, value) => `${levelIndent}  - ${key}: ${value}`,
+    added: (key, value) => `${levelIndent}  + ${key}: ${value}`,
+    nested: (key, value) => `${levelIndent}    ${key}: ${value}`,
+    plain: (key, value) => {
+      const rawStringList = [];
+      rawStringList.push(`${key}: {`);
+      rawStringList.push(`    ${getObjectPlain(value)}`);
+      rawStringList.push('}');
+      const indentedRawList = rawStringList.map((rawString) => `${levelIndent}${rawString}`);
+      const resultString = indentedRawList.join('\n');
+      return resultString;
+    },
+  };
 };
 
-const stylish = (rawData, level = 0) => {
-  // Rename to 'result' after debugging
-  let stylishResult = rawData.map((currentLine) => {
-    // Delete after debuging
-    let stylishedString;
+/**
+ * Get styled output
+ * @param dataList{[{key: string, value: any, status: 'unchanged' | 'updated' | 'removed' | 'added' | 'nested'}]}
+ * @param level{number}
+ * @return {string | [string]}
+ */
+const stylish = (dataList, level = 0) => {
+  const result = [];
+  const getString = stringMaker(level);
 
-    if (currentLine.status === 'unchanged') {
-      const currentIndent = makeIndent(level + 1);
-      stylishedString = `${currentIndent}  ${currentLine.key}: ${stringifyData(currentLine.value, level + 1)}`;
-      return stylishedString;
+  dataList.forEach((data) => {
+    const { key, value, status } = data;
+    const isPlainObject = _.isPlainObject(value);
+
+    if (isPlainObject) {
+      console.log(`isPlainObject=${isPlainObject}`);
+      console.log(JSON.stringify(value));
+
+      const test = stringMaker(level + 1);
+      const resultObject = test.plain(key, value);
+      result.push(resultObject);
+      return;
     }
-    if (currentLine.status === 'nested') {
-      const currentIndent = makeIndent(level + 1);
-      stylishedString = `${currentIndent}  ${currentLine.key}: ${stylish(currentLine.value, level + 1)}`;
-      return stylishedString;
+
+    switch (status) {
+      case 'nested': {
+        const resultString = `${'    '.repeat(level + 1)}${key}: {`;
+        result.push(resultString);
+        result.push(stylish(value, level + 1).join('\n'));
+        result.push(`${'    '.repeat(level + 1)}}`);
+        break;
+      }
+      default:
+        result.push(getString[status](key, value));
+        break;
     }
-    if (currentLine.status === 'updated') {
-      const oldValue = currentLine.value[0];
-      const newValue = currentLine.value[1];
-      const currentIndent = makeIndent(level + 1);
-      stylishedString = [
-        `${currentIndent}- ${currentLine.key}: ${stringifyData(oldValue, level + 1)}`,
-        `${currentIndent}+ ${currentLine.key}: ${stringifyData(newValue, level + 1)}`,
-      ].join('\n');
-      return stylishedString;
-    }
-    if (currentLine.status === 'removed') {
-      const currentIndent = makeIndent(level + 1);
-      stylishedString = `${currentIndent}- ${currentLine.key}: ${stringifyData(currentLine.value, level + 1)}`;
-      return stylishedString;
-    }
-    if (currentLine.status === 'added') {
-      const currentIndent = makeIndent(level + 1);
-      stylishedString = `${currentIndent}+ ${currentLine.key}: ${stringifyData(currentLine.value, level + 1)}`;
-      return stylishedString;
-    }
-    return '';
   });
 
-  stylishResult = stylishResult.flat().join('\n');
-  console.log(stylishResult);
-  return `{\n${stylishResult}\n${makeIndent(level)}}`;
+  if (level === 0) {
+    console.log(level === 0);
+  }
+
+  return level === 0
+    ? `{\n${result.join('\n')}\n}`
+    : result;
 };
 
 export default stylish;
