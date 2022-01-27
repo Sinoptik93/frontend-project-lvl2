@@ -28,34 +28,29 @@ const getPlain = (diffList, oldPath = null) => {
   const path = oldPath ?? [];
   const rawStringList = diffList.map((diffItem) => {
     const resultPath = `${path.join('')}${diffItem.key}`;
-    let result;
 
     switch (diffItem.status) {
       case 'nested':
-        result = `${getPlain(diffItem.children, path.concat(diffItem.key, '.'))}`;
-        break;
+        return `${getPlain(diffItem.children, path.concat(diffItem.key, '.'))}`;
       case 'unchanged':
         break;
       case 'added':
-        result = `Property '${resultPath}' was added with value: ${printValue(diffItem.value)}`;
-        break;
+        return `Property '${resultPath}' was added with value: ${printValue(diffItem.value)}`;
       case 'removed':
-        result = `Property '${resultPath}' was removed`;
-        break;
+        return `Property '${resultPath}' was removed`;
       case 'updated': {
         const [beforeValue, afterValue] = diffItem.value;
-        result = `Property '${resultPath}' was updated. From ${
+        return `Property '${resultPath}' was updated. From ${
           printValue(beforeValue)
         } to ${
           printValue(afterValue)
         }`;
-        break;
       }
       default:
         break;
     }
 
-    return result;
+    return null;
   });
 
   return rawStringList.filter((item) => item).join('\n');
