@@ -1,5 +1,6 @@
 # Project II | Hexlet "Difference calculator" | Frontend
 
+[![Actions Status](https://github.com/Sinoptik93/frontend-project-lvl2/workflows/hexlet-check/badge.svg)](https://github.com/Sinoptik93/frontend-project-lvl2/actions)
 [![Eslint](https://github.com/Sinoptik93/frontend-project-lvl2/workflows/eslint/badge.svg)](https://github.com/Sinoptik93/frontend-project-lvl2/actions)
 [![Maintainability](https://api.codeclimate.com/v1/badges/09c96cb1204218a32a53/maintainability)](https://codeclimate.com/github/Sinoptik93/frontend-project-lvl2/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/09c96cb1204218a32a53/test_coverage)](https://codeclimate.com/github/Sinoptik93/frontend-project-lvl2/test_coverage)
@@ -22,12 +23,12 @@ Gendiff is CLI util for
 - `json`
 
 ## Install
-Node version: `14^`
+Node version: `16.^`
 
 ```
 # how to check node version:
 $ node -v
-v14.17.1
+v16.13.2
 ```
 
 1. Clone repository:
