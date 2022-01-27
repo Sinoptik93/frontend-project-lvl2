@@ -8,17 +8,17 @@ import _ from 'lodash';
  */
 const getDiff = (file1, file2) => {
   const keysList = [...Object.keys(file1), ...Object.keys(file2)];
-  const totalKeys = _.union(keysList).sort();
+  const sortedKeysList = _.union(keysList).sort();
 
-  return totalKeys.map((key) => {
+  return sortedKeysList.map((key) => {
     const valueBefore = file1[key];
     const valueAfter = file2[key];
 
-    if (_.isPlainObject(valueBefore) && _.isPlainObject(valueAfter)) {
+    if (!_.has(file2, key)) {
       return {
         key,
-        value: getDiff(valueBefore, valueAfter),
-        status: 'nested',
+        value: valueBefore,
+        status: 'removed',
       };
     }
 
@@ -30,18 +30,19 @@ const getDiff = (file1, file2) => {
       };
     }
 
-    if (!_.has(file2, key)) {
+    if (_.isPlainObject(valueBefore) && _.isPlainObject(valueAfter)) {
+      const children = getDiff(valueBefore, valueAfter);
       return {
         key,
-        value: valueBefore,
-        status: 'removed',
+        status: 'nested',
+        children,
       };
     }
 
     if (!_.isEqual(valueBefore, valueAfter)) {
       return {
         key,
-        value: { before: valueBefore, after: valueAfter },
+        value: [valueBefore, valueAfter],
         status: 'updated',
       };
     }

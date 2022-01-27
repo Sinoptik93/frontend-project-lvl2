@@ -35,7 +35,7 @@ const resultFlat = [
   {
     key: 'timeout',
     status: 'updated',
-    value: { before: 50, after: 20 },
+    value: [50, 20],
   },
   {
     key: 'verbose',
@@ -62,7 +62,7 @@ const resultIniFlat = [
   {
     key: 'timeout',
     status: 'updated',
-    value: { before: '50', after: '20' },
+    value: ['50', '20'],
   },
   {
     key: 'verbose',
@@ -74,7 +74,7 @@ const resultNested = [
   {
     key: 'common',
     status: 'nested',
-    value: [
+    children: [
       {
         key: 'follow',
         status: 'added',
@@ -93,7 +93,7 @@ const resultNested = [
       {
         key: 'setting3',
         status: 'updated',
-        value: { before: true, after: null },
+        value: [true, null],
       },
       {
         key: 'setting4',
@@ -110,17 +110,18 @@ const resultNested = [
       {
         key: 'setting6',
         status: 'nested',
-        value: [
+        children: [
           {
             key: 'doge',
             status: 'nested',
-            value: [
+            children: [
               {
                 key: 'wow',
                 status: 'updated',
-                value: { before: '', after: 'so much' },
+                value: ['', 'so much'],
               },
             ],
+
           },
           {
             key: 'key',
@@ -139,11 +140,14 @@ const resultNested = [
   {
     key: 'group1',
     status: 'nested',
-    value: [
+    children: [
       {
         key: 'baz',
         status: 'updated',
-        value: { before: 'bas', after: 'bars' },
+        value: [
+          'bas',
+          'bars',
+        ],
       },
       {
         key: 'foo',
@@ -153,7 +157,12 @@ const resultNested = [
       {
         key: 'nest',
         status: 'updated',
-        value: { before: { key: 'value' }, after: 'str' },
+        value: [
+          {
+            key: 'value',
+          },
+          'str',
+        ],
       },
     ],
   },
