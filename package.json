@@ -10,7 +10,7 @@
     "prepublishOnly": "npm run build"
   },
   "bin": {
-    "gendiff": "bin/gendiff.js"
+    "gendiff": "src/gendiff.js"
   },
   "files": [
     "dist"
