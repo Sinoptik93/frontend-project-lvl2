@@ -52,7 +52,6 @@ const stringMaker = (level) => {
     unchanged: (key, value) => `${currentIndent}    ${key}: ${value}`,
     removed: (key, value) => `${currentIndent}  - ${key}: ${value}`,
     added: (key, value) => `${currentIndent}  + ${key}: ${value}`,
-    nested: (key, value) => `${currentIndent}    ${key}: ${value}`,
     updated: (key, [valueBefore, valueAfter]) => {
       if (_.isPlainObject(valueBefore)) {
         const result = [];
@@ -71,17 +70,15 @@ const stringMaker = (level) => {
 
       if (_.isPlainObject(valueAfter)) {
         const result = [];
-        const beforeString = `${currentIndent}  + ${key}: ${valueBefore}`;
+        const beforeString = `${currentIndent}  - ${key}: ${valueBefore}`;
 
-        const afterTopString = `${currentIndent}  - ${key}: {`;
-        const afterBody = getStringified(valueBefore, level + 1);
-        const afterBottomString = `${currentIndent}}`;
+        const afterTopString = `${currentIndent}  + ${key}: {`;
+        const afterBody = getStringified(valueAfter, level + 1);
 
         result.push(
           beforeString,
           afterTopString,
           afterBody,
-          afterBottomString,
         );
         return result.join('\n');
       }
@@ -93,12 +90,12 @@ const stringMaker = (level) => {
 };
 
 /**
- * Get styled output.
+ * Get tree styled output.
  * @param dataList{[{key: string, value: any, status: 'unchanged' | 'updated' | 'removed' | 'added' | 'nested'}]}
  * @param level{number}
  * @return {string | [string]}
  */
-const stylish = (dataList, level = 0) => {
+const getStylish = (dataList, level = 0) => {
   const result = [];
   const getString = stringMaker(level);
 
@@ -121,7 +118,7 @@ const stylish = (dataList, level = 0) => {
     } else if (children) {
       const topString = `${getIndent(level + 1)}${key}: {`;
       const bottomString = `${getIndent(level + 1)}}`;
-      const body = stylish(children, level + 1).join('\n');
+      const body = getStylish(children, level + 1).join('\n');
 
       result.push(topString, body, bottomString);
     } else {
@@ -134,4 +131,4 @@ const stylish = (dataList, level = 0) => {
     : result;
 };
 
-export default stylish;
+export default getStylish;

@@ -40,6 +40,10 @@ const resultTree = (
             key: value
         }
       + nest: str
+      - nestAfter: str
+      + nestAfter: {
+            key: value
+        }
     }
   - group2: {
         abc: 12345
@@ -57,40 +61,102 @@ const resultTree = (
     }
 }`);
 
-const relativePathTo = (fileName) => `./__tests__/__fixtures__/json/${fileName}`;
-const absolutePathTo = (fileName) => path.join(__dirname, '__fixtures__', 'json', fileName);
+const resultPlain = (
+  `Property 'common.follow' was added with value: false
+Property 'common.setting2' was removed
+Property 'common.setting3' was updated. From true to null
+Property 'common.setting4' was added with value: 'blah blah'
+Property 'common.setting5' was added with value: [complex value]
+Property 'common.setting6.doge.wow' was updated. From '' to 'so much'
+Property 'common.setting6.ops' was added with value: 'vops'
+Property 'group1.baz' was updated. From 'bas' to 'bars'
+Property 'group1.nest' was updated. From [complex value] to 'str'
+Property 'group1.nestAfter' was updated. From 'str' to [complex value]
+Property 'group2' was removed
+Property 'group3' was added with value: [complex value]`
+);
+
+const resultJson = (
+  '[{"key":"common","status":"nested","children":[{"key":"follow","value":false,"status":"added"},{"key":"setting1","value":"Value 1","status":"unchanged"},{"key":"setting2","value":200,"status":"removed"},{"key":"setting3","value":[true,null],"status":"updated"},{"key":"setting4","value":"blah blah","status":"added"},{"key":"setting5","value":{"key5":"value5"},"status":"added"},{"key":"setting6","status":"nested","children":[{"key":"doge","status":"nested","children":[{"key":"wow","value":["","so much"],"status":"updated"}]},{"key":"key","value":"value","status":"unchanged"},{"key":"ops","value":"vops","status":"added"}]}]},{"key":"group1","status":"nested","children":[{"key":"baz","value":["bas","bars"],"status":"updated"},{"key":"foo","value":"bar","status":"unchanged"},{"key":"nest","value":[{"key":"value"},"str"],"status":"updated"},{"key":"nestAfter","value":["str",{"key":"value"}],"status":"updated"}]},{"key":"group2","value":{"abc":12345,"deep":{"id":45}},"status":"removed"},{"key":"group3","value":{"deep":{"id":{"number":45}},"fee":100500},"status":"added"}]'
+);
+
+const relativePathTo = (fileName, ext) => `./__tests__/__fixtures__/${ext}/${fileName}`;
+const absolutePathTo = (fileName, ext) => path.join(__dirname, '__fixtures__', ext, fileName);
 const testFiles = [
-  ['before.json', 'after.json', 'JSON'],
+  ['before.json', 'after.json', 'json'],
+  ['before.ini', 'after.ini', 'ini'],
+  ['before.yml', 'after.yml', 'yml'],
 ];
 
 describe('Flat', () => {
-  test.each(testFiles)('%s format (relative path):', (file1, file2) => {
+  test.each(testFiles)('%s format (relative path):', (file1, file2, ext) => {
     expect(gendiff(
-      relativePathTo(file1),
-      relativePathTo(file2),
+      relativePathTo(file1, ext),
+      relativePathTo(file2, ext),
     ))
       .toBe(resultFlat);
   });
-  test.each(testFiles)('%s %s | %s format (absolute path):', (file1, file2) => {
+
+  test.each(testFiles)('%s %s | %s format (absolute path):', (file1, file2, ext) => {
     expect(gendiff(
-      absolutePathTo(file1),
-      absolutePathTo(file2),
+      absolutePathTo(file1, ext),
+      absolutePathTo(file2, ext),
     ))
       .toBe(resultFlat);
   });
 });
 
-describe('Gendiff recursive tree', () => {
-  test('JSON format (relative/absolute path)', () => {
+describe('Tree', () => {
+  test('JSON format (relative path)', () => {
     expect(gendiff(
-      relativePathTo('beforeTree.json'),
-      relativePathTo('afterTree.json'),
+      relativePathTo('beforeTree.json', 'json'),
+      relativePathTo('afterTree.json', 'json'),
     ))
       .toBe(resultTree);
+  });
+  test('JSON format (absolute path)', () => {
     expect(gendiff(
-      absolutePathTo('beforeTree.json'),
-      absolutePathTo('afterTree.json'),
+      absolutePathTo('beforeTree.json', 'json'),
+      absolutePathTo('afterTree.json', 'json'),
     ))
       .toBe(resultTree);
+  });
+});
+
+describe('Plain', () => {
+  test('JSON format (relative path)', () => {
+    expect(gendiff(
+      relativePathTo('beforeTree.json', 'json'),
+      relativePathTo('afterTree.json', 'json'),
+      'plain',
+    ))
+      .toBe(resultPlain);
+  });
+  test('JSON format (absolute path)', () => {
+    expect(gendiff(
+      absolutePathTo('beforeTree.json', 'json'),
+      absolutePathTo('afterTree.json', 'json'),
+      'plain',
+    ))
+      .toBe(resultPlain);
+  });
+});
+
+describe('JSON', () => {
+  test('JSON format (relative path)', () => {
+    expect(gendiff(
+      relativePathTo('beforeTree.json', 'json'),
+      relativePathTo('afterTree.json', 'json'),
+      'json',
+    ))
+      .toBe(resultJson);
+  });
+  test('JSON format (absolute path)', () => {
+    expect(gendiff(
+      absolutePathTo('beforeTree.json', 'json'),
+      absolutePathTo('afterTree.json', 'json'),
+      'json',
+    ))
+      .toBe(resultJson);
   });
 });

@@ -22,7 +22,11 @@
   "group1": {
     "foo": "bar",
     "baz": "bars",
-    "nest": "str"
+    "nest": "str",
+    "nestAfter": {
+      "key": "value"
+    }
+
   },
 
   "group3": {
