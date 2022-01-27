@@ -28,14 +28,17 @@ const getStringified = (item, level) => {
     const isNestedValue = _.isPlainObject(value);
 
     const topString = `${getIndent(level + 1)}${key}: ${isNestedValue ? '{' : value}`;
+    // eslint-disable-next-line fp/no-mutating-methods
     result.push(topString);
 
     if (isNestedValue) {
       const body = getStringified(value, level + 1);
+      // eslint-disable-next-line fp/no-mutating-methods
       result.push(body);
     }
   });
 
+  // eslint-disable-next-line fp/no-mutating-methods
   result.push(`${getIndent(level)}}`);
   return result.join('\n');
 };
@@ -43,7 +46,7 @@ const getStringified = (item, level) => {
 /**
  * Get string getter by item status.
  * @param level{number}
- * @return {{removed: (function(string, *): string), added: (function(string, *): string), unchanged: (function(string, *): string), nested: (function(string, *): string), updated: ((function(string, [*,*]): (string|string)))}}
+ * @return {{}}
  */
 const stringMaker = (level) => {
   const currentIndent = getIndent(level);
@@ -60,6 +63,7 @@ const stringMaker = (level) => {
 
         const afterString = `${currentIndent}  + ${key}: ${valueAfter}`;
 
+        // eslint-disable-next-line fp/no-mutating-methods
         result.push(
           beforeTopString,
           beforeBody,
@@ -75,6 +79,7 @@ const stringMaker = (level) => {
         const afterTopString = `${currentIndent}  + ${key}: {`;
         const afterBody = getStringified(valueAfter, level + 1);
 
+        // eslint-disable-next-line fp/no-mutating-methods
         result.push(
           beforeString,
           afterTopString,
@@ -91,7 +96,7 @@ const stringMaker = (level) => {
 
 /**
  * Get tree styled output.
- * @param dataList{[{key: string, value: any, status: 'unchanged' | 'updated' | 'removed' | 'added' | 'nested'}]}
+ * @param dataList{{}[]}
  * @param level{number}
  * @return {string | [string]}
  */
@@ -114,14 +119,17 @@ const getStylish = (dataList, level = 0) => {
 
     if (_.isPlainObject(value)) {
       const topString = `${getIndent(level)}  ${char[status]} ${key}: {`;
+      // eslint-disable-next-line fp/no-mutating-methods
       result.push(topString, getStringified(value, level + 1));
     } else if (children) {
       const topString = `${getIndent(level + 1)}${key}: {`;
       const bottomString = `${getIndent(level + 1)}}`;
       const body = getStylish(children, level + 1).join('\n');
 
+      // eslint-disable-next-line fp/no-mutating-methods
       result.push(topString, body, bottomString);
     } else {
+      // eslint-disable-next-line fp/no-mutating-methods
       result.push(getString[status](key, value));
     }
   });

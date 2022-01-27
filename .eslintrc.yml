@@ -7,8 +7,13 @@ extends:
   - 'airbnb-base'
   - 'plugin:jest/recommended'
   - 'plugin:import/recommended'
+plugins:
+  - jest
+  - babel
+  - fp
 rules:
   no-console: 0
+  fp/no-mutating-methods: "error"
   no-multiple-empty-lines: 1
   consistent-return: 1
   array-callback-return: "error"
@@ -26,9 +31,6 @@ rules:
         "allow": [ "__filename", "__dirname" ]
       }
   ]
-plugins:
-  - jest
-  - babel
 settings:
   import/resolver:
     node:
