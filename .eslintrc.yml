@@ -9,6 +9,14 @@ extends:
   - 'plugin:import/recommended'
 rules:
   no-console: 0
+  no-multiple-empty-lines: 1
+  consistent-return: 1
+  array-callback-return: [
+      1,
+      {
+        allowImplicit: true
+      }
+  ]
   import/extensions: 0
   max-len: [
       1,
