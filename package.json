@@ -1,5 +1,5 @@
 {
-  "name": "frontend-project-lvl2",
+  "name": "@hexlet/code",
   "version": "1.0.1",
   "description": "Hexlet second  education project (frontend).",
   "main": "dist/index.js",
