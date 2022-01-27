@@ -2,7 +2,7 @@
   "name": "@hexlet/code",
   "version": "1.0.1",
   "description": "Hexlet second  education project (frontend).",
-  "main": "dist/index.js",
+  "main": "src/index.js",
   "type": "module",
   "scripts": {
     "test": "jest",
