@@ -1,7 +1,7 @@
 {
   "name": "@hexlet/code",
   "version": "1.0.1",
-  "description": "Hexlet second  education project (frontend).",
+  "description": "Hexlet second education project | frontend.",
   "main": "src/index.js",
   "type": "module",
   "scripts": {
@@ -26,7 +26,6 @@
   },
   "homepage": "https://github.com/Sinoptik93/frontend-project-lvl2#readme",
   "dependencies": {
-    "cli-color": "^2.0.1",
     "commander": "^4.1.1",
     "ini": "^1.3.5",
     "js-yaml": "^3.14.0",
