@@ -16,10 +16,10 @@
   "group1": {
     "baz": "bas",
     "foo": "bar",
-
     "nest": {
       "key": "value"
-    }
+    },
+    "nestAfter": "str"
   },
 
   "group2": {

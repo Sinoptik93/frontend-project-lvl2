@@ -164,6 +164,16 @@ const resultNested = [
           'str',
         ],
       },
+      {
+        key: 'nestAfter',
+        status: 'updated',
+        value: [
+          'str',
+          {
+            key: 'value',
+          },
+        ],
+      },
     ],
   },
   {

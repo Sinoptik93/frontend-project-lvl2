@@ -40,6 +40,10 @@ const resultTree = (
             key: value
         }
       + nest: str
+      - nestAfter: str
+      + nestAfter: {
+            key: value
+        }
     }
   - group2: {
         abc: 12345
@@ -57,6 +61,21 @@ const resultTree = (
     }
 }`);
 
+const resultPlain = (
+  `Property 'common.follow' was added with value: false
+Property 'common.setting2' was removed
+Property 'common.setting3' was updated. From true to null
+Property 'common.setting4' was added with value: 'blah blah'
+Property 'common.setting5' was added with value: [complex value]
+Property 'common.setting6.doge.wow' was updated. From '' to 'so much'
+Property 'common.setting6.ops' was added with value: 'vops'
+Property 'group1.baz' was updated. From 'bas' to 'bars'
+Property 'group1.nest' was updated. From [complex value] to 'str'
+Property 'group1.nestAfter' was updated. From 'str' to [complex value]
+Property 'group2' was removed
+Property 'group3' was added with value: [complex value]`
+);
+
 const relativePathTo = (fileName) => `./__tests__/__fixtures__/json/${fileName}`;
 const absolutePathTo = (fileName) => path.join(__dirname, '__fixtures__', 'json', fileName);
 const testFiles = [
@@ -71,6 +90,7 @@ describe('Flat', () => {
     ))
       .toBe(resultFlat);
   });
+
   test.each(testFiles)('%s %s | %s format (absolute path):', (file1, file2) => {
     expect(gendiff(
       absolutePathTo(file1),
@@ -80,17 +100,36 @@ describe('Flat', () => {
   });
 });
 
-describe('Gendiff recursive tree', () => {
+describe('Tree', () => {
   test('JSON format (relative/absolute path)', () => {
     expect(gendiff(
       relativePathTo('beforeTree.json'),
       relativePathTo('afterTree.json'),
     ))
       .toBe(resultTree);
+
     expect(gendiff(
       absolutePathTo('beforeTree.json'),
       absolutePathTo('afterTree.json'),
     ))
       .toBe(resultTree);
+  });
+});
+
+describe('Plain', () => {
+  test('JSON format (relative/absolute path)', () => {
+    expect(gendiff(
+      relativePathTo('beforeTree.json'),
+      relativePathTo('afterTree.json'),
+      'plain',
+    ))
+      .toBe(resultPlain);
+
+    expect(gendiff(
+      absolutePathTo('beforeTree.json'),
+      absolutePathTo('afterTree.json'),
+      'plain',
+    ))
+      .toBe(resultPlain);
   });
 });
