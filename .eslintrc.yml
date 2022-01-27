@@ -21,7 +21,7 @@ rules:
   max-len: [
       1,
       {
-        "code": 100,
+        "code": 150,
         "ignoreComments": true
       }
   ]
