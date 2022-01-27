@@ -35,7 +35,7 @@ const resultFlat = [
   {
     key: 'timeout',
     status: 'updated',
-    value: { before: 50, after: 20 },
+    value: [50, 20],
   },
   {
     key: 'verbose',
@@ -62,7 +62,7 @@ const resultIniFlat = [
   {
     key: 'timeout',
     status: 'updated',
-    value: { before: '50', after: '20' },
+    value: ['50', '20'],
   },
   {
     key: 'verbose',
@@ -72,6 +72,8 @@ const resultIniFlat = [
 ];
 const resultNested = [
   {
+    key: 'common',
+    status: 'nested',
     children: [
       {
         key: 'follow',
@@ -91,10 +93,7 @@ const resultNested = [
       {
         key: 'setting3',
         status: 'updated',
-        value: {
-          after: null,
-          before: true,
-        },
+        value: [true, null],
       },
       {
         key: 'setting4',
@@ -109,20 +108,20 @@ const resultNested = [
         },
       },
       {
+        key: 'setting6',
+        status: 'nested',
         children: [
           {
+            key: 'doge',
+            status: 'nested',
             children: [
               {
                 key: 'wow',
                 status: 'updated',
-                value: {
-                  after: 'so much',
-                  before: '',
-                },
+                value: ['', 'so much'],
               },
             ],
-            key: 'doge',
-            status: 'nested',
+
           },
           {
             key: 'key',
@@ -135,22 +134,20 @@ const resultNested = [
             value: 'vops',
           },
         ],
-        key: 'setting6',
-        status: 'nested',
       },
     ],
-    key: 'common',
-    status: 'nested',
   },
   {
+    key: 'group1',
+    status: 'nested',
     children: [
       {
         key: 'baz',
         status: 'updated',
-        value: {
-          after: 'bars',
-          before: 'bas',
-        },
+        value: [
+          'bas',
+          'bars',
+        ],
       },
       {
         key: 'foo',
@@ -160,16 +157,14 @@ const resultNested = [
       {
         key: 'nest',
         status: 'updated',
-        value: {
-          after: 'str',
-          before: {
+        value: [
+          {
             key: 'value',
           },
-        },
+          'str',
+        ],
       },
     ],
-    key: 'group1',
-    status: 'nested',
   },
   {
     key: 'group2',

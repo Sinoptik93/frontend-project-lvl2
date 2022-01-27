@@ -25,7 +25,7 @@ const resultTree = (
         }
         setting6: {
             doge: {
-              - wow:
+              - wow: 
               + wow: so much
             }
             key: value
@@ -38,7 +38,7 @@ const resultTree = (
         foo: bar
       - nest: {
             key: value
-      }
+        }
       + nest: str
     }
   - group2: {

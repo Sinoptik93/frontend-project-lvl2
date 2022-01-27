@@ -42,7 +42,7 @@ const getDiff = (file1, file2) => {
     if (!_.isEqual(valueBefore, valueAfter)) {
       return {
         key,
-        value: { before: valueBefore, after: valueAfter },
+        value: [valueBefore, valueAfter],
         status: 'updated',
       };
     }
