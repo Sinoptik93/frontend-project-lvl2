@@ -77,7 +77,18 @@ Property 'group3' was added with value: [complex value]`
 );
 
 const resultJson = (
-  '[{"key":"common","status":"nested","children":[{"key":"follow","value":false,"status":"added"},{"key":"setting1","value":"Value 1","status":"unchanged"},{"key":"setting2","value":200,"status":"removed"},{"key":"setting3","value":[true,null],"status":"updated"},{"key":"setting4","value":"blah blah","status":"added"},{"key":"setting5","value":{"key5":"value5"},"status":"added"},{"key":"setting6","status":"nested","children":[{"key":"doge","status":"nested","children":[{"key":"wow","value":["","so much"],"status":"updated"}]},{"key":"key","value":"value","status":"unchanged"},{"key":"ops","value":"vops","status":"added"}]}]},{"key":"group1","status":"nested","children":[{"key":"baz","value":["bas","bars"],"status":"updated"},{"key":"foo","value":"bar","status":"unchanged"},{"key":"nest","value":[{"key":"value"},"str"],"status":"updated"},{"key":"nestAfter","value":["str",{"key":"value"}],"status":"updated"}]},{"key":"group2","value":{"abc":12345,"deep":{"id":45}},"status":"removed"},{"key":"group3","value":{"deep":{"id":{"number":45}},"fee":100500},"status":"added"}]'
+  '[{"key":"common","status":"nested","children":[{"key":"follow","value":false,"status":"added"},'
+  + '{"key":"setting1","value":"Value 1","status":"unchanged"},{"key":"setting2","value":200,'
+  + '"status":"removed"},{"key":"setting3","value":[true,null],"status":"updated"},{"key":"sett'
+  + 'ing4","value":"blah blah","status":"added"},{"key":"setting5","value":{"key5":"value5"},"s'
+  + 'tatus":"added"},{"key":"setting6","status":"nested","children":[{"key":"doge","status":"ne'
+  + 'sted","children":[{"key":"wow","value":["","so much"],"status":"updated"}]},{"key":"key","v'
+  + 'alue":"value","status":"unchanged"},{"key":"ops","value":"vops","status":"added"}]}]},{"key"'
+  + ':"group1","status":"nested","children":[{"key":"baz","value":["bas","bars"],"status":"updated'
+  + '"},{"key":"foo","value":"bar","status":"unchanged"},{"key":"nest","value":[{"key":"value"},"'
+  + 'str"],"status":"updated"},{"key":"nestAfter","value":["str",{"key":"value"}],"status":"update'
+  + 'd"}]},{"key":"group2","value":{"abc":12345,"deep":{"id":45}},"status":"removed"},{"key":"grou'
+  + 'p3","value":{"deep":{"id":{"number":45}},"fee":100500},"status":"added"}]'
 );
 
 const relativePathTo = (fileName, ext) => `./__tests__/__fixtures__/${ext}/${fileName}`;
@@ -89,17 +100,9 @@ const testFiles = [
 ];
 
 describe('Flat', () => {
-  test.each(testFiles)('%s format (relative path):', (file1, file2, ext) => {
+  test.each(testFiles)('%s format:', (file1, file2, ext) => {
     expect(gendiff(
       relativePathTo(file1, ext),
-      relativePathTo(file2, ext),
-    ))
-      .toBe(resultFlat);
-  });
-
-  test.each(testFiles)('%s %s | %s format (absolute path):', (file1, file2, ext) => {
-    expect(gendiff(
-      absolutePathTo(file1, ext),
       absolutePathTo(file2, ext),
     ))
       .toBe(resultFlat);
@@ -107,35 +110,20 @@ describe('Flat', () => {
 });
 
 describe('Tree', () => {
-  test('JSON format (relative path)', () => {
+  test('JSON format', () => {
     expect(gendiff(
       relativePathTo('beforeTree.json', 'json'),
       relativePathTo('afterTree.json', 'json'),
-    ))
-      .toBe(resultTree);
-  });
-  test('JSON format (absolute path)', () => {
-    expect(gendiff(
-      absolutePathTo('beforeTree.json', 'json'),
-      absolutePathTo('afterTree.json', 'json'),
     ))
       .toBe(resultTree);
   });
 });
 
 describe('Plain', () => {
-  test('JSON format (relative path)', () => {
+  test('JSON format', () => {
     expect(gendiff(
       relativePathTo('beforeTree.json', 'json'),
       relativePathTo('afterTree.json', 'json'),
-      'plain',
-    ))
-      .toBe(resultPlain);
-  });
-  test('JSON format (absolute path)', () => {
-    expect(gendiff(
-      absolutePathTo('beforeTree.json', 'json'),
-      absolutePathTo('afterTree.json', 'json'),
       'plain',
     ))
       .toBe(resultPlain);
@@ -143,18 +131,10 @@ describe('Plain', () => {
 });
 
 describe('JSON', () => {
-  test('JSON format (relative path)', () => {
+  test('JSON format', () => {
     expect(gendiff(
       relativePathTo('beforeTree.json', 'json'),
       relativePathTo('afterTree.json', 'json'),
-      'json',
-    ))
-      .toBe(resultJson);
-  });
-  test('JSON format (absolute path)', () => {
-    expect(gendiff(
-      absolutePathTo('beforeTree.json', 'json'),
-      absolutePathTo('afterTree.json', 'json'),
       'json',
     ))
       .toBe(resultJson);
