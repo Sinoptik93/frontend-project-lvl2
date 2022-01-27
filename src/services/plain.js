@@ -1,3 +1,8 @@
+/**
+ * Get typed stringed value.
+ * @param value{{key: string, value: any, status: 'unchanged' | 'updated' | 'removed' | 'added' | 'nested'}}
+ * @return {string|*}
+ */
 const printValue = (value) => {
   const valueType = value === null ? 'null' : typeof value;
 
@@ -13,7 +18,13 @@ const printValue = (value) => {
   }
 };
 
-const getPlain = (diffList, oldPath) => {
+/**
+ * Get plain styled output.
+ * @param diffList{{key: string, value: any, status: 'unchanged' | 'updated' | 'removed' | 'added' | 'nested'}[]}
+ * @param oldPath{null|string[]}
+ * @return {*}
+ */
+const getPlain = (diffList, oldPath = null) => {
   const path = oldPath ?? [];
   const rawStringList = diffList.map((diffItem) => {
     switch (diffItem.status) {

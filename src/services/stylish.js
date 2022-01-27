@@ -90,7 +90,7 @@ const stringMaker = (level) => {
 };
 
 /**
- * Get styled output.
+ * Get tree styled output.
  * @param dataList{[{key: string, value: any, status: 'unchanged' | 'updated' | 'removed' | 'added' | 'nested'}]}
  * @param level{number}
  * @return {string | [string]}
