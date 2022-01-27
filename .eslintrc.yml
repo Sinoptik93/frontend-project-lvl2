@@ -11,18 +11,13 @@ rules:
   no-console: 0
   no-multiple-empty-lines: 1
   consistent-return: 1
-  array-callback-return: [
-      1,
-      {
-        allowImplicit: true
-      }
-  ]
+  array-callback-return: "error"
   import/extensions: 0
   max-len: [
-      1,
+      "error",
       {
-        "code": 150,
-        "ignoreComments": true
+        "code": 100,
+        "ignoreComments": false
       }
   ]
   no-underscore-dangle: [

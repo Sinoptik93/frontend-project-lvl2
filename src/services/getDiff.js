@@ -8,7 +8,7 @@ import _ from 'lodash';
  */
 const getDiff = (file1, file2) => {
   const keysList = [...Object.keys(file1), ...Object.keys(file2)];
-  const sortedKeysList = _.sort(_.union(keysList));
+  const sortedKeysList = _.sortBy(_.union(keysList));
 
   return sortedKeysList.map((key) => {
     const valueBefore = file1[key];

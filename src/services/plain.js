@@ -1,6 +1,6 @@
 /**
  * Get typed stringed value.
- * @param value{{key: string, value: any, status: 'unchanged' | 'updated' | 'removed' | 'added' | 'nested'}}
+ * @param value{{}}
  * @return {string|*}
  */
 const printValue = (value) => {
@@ -20,29 +20,42 @@ const printValue = (value) => {
 
 /**
  * Get plain styled output.
- * @param diffList{{key: string, value: any, status: 'unchanged' | 'updated' | 'removed' | 'added' | 'nested'}[]}
+ * @param diffList{{}[]}
  * @param oldPath{null|string[]}
  * @return {*}
  */
 const getPlain = (diffList, oldPath = null) => {
   const path = oldPath ?? [];
   const rawStringList = diffList.map((diffItem) => {
+    const resultPath = `${path.join('')}${diffItem.key}`;
+    let result;
+
     switch (diffItem.status) {
       case 'nested':
-        return `${getPlain(diffItem.children, path.concat(diffItem.key, '.'))}`;
+        result = `${getPlain(diffItem.children, path.concat(diffItem.key, '.'))}`;
+        break;
       case 'unchanged':
         break;
       case 'added':
-        return `Property '${path.join('')}${diffItem.key}' was added with value: ${printValue(diffItem.value)}`;
+        result = `Property '${resultPath}' was added with value: ${printValue(diffItem.value)}`;
+        break;
       case 'removed':
-        return `Property '${path.join('')}${diffItem.key}' was removed`;
+        result = `Property '${resultPath}' was removed`;
+        break;
       case 'updated': {
         const [beforeValue, afterValue] = diffItem.value;
-        return `Property '${path.join('')}${diffItem.key}' was updated. From ${printValue(beforeValue)} to ${printValue(afterValue)}`;
+        result = `Property '${resultPath}' was updated. From ${
+          printValue(beforeValue)
+        } to ${
+          printValue(afterValue)
+        }`;
+        break;
       }
       default:
         break;
     }
+
+    return result;
   });
 
   return rawStringList.filter((item) => item).join('\n');
