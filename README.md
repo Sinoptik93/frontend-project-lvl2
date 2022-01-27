@@ -6,7 +6,7 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/09c96cb1204218a32a53/test_coverage)](https://codeclimate.com/github/Sinoptik93/frontend-project-lvl2/test_coverage)
 
 ## gendiff
-Gendiff is CLI util for 
+Gendiff is CLI util for getting diffs between compared files.
 
 **Supported file extensions:**
 - `.json`
@@ -70,12 +70,12 @@ $ gendiff --help
 
 2. Get stylish output diff:
 ```
-gendiff fileExample1.json fileExample2.json
+$ gendiff fileExample1.json fileExample2.json
 # equal
-gendiff --format stylish fileExample1.json fileExample2.json
+$ gendiff --format stylish fileExample1.json fileExample2.json
 
 # supported absolute paths
-gendiff rootFolder/path/to/the/fileExample1.json rootFolder/path/to/the/fileExample2.json
+$ gendiff rootFolder/path/to/the/fileExample1.json rootFolder/path/to/the/fileExample2.json
 ```
 ![gendiff-json](https://i.ibb.co/zstjxcZ/gendiff-json.gif)
 [asciinema](https://asciinema.org/a/3Rt2JpmpKFSuVxRR86jYEKJgr)
@@ -83,13 +83,13 @@ gendiff rootFolder/path/to/the/fileExample1.json rootFolder/path/to/the/fileExam
 
 3. Supported `.ini`, `.yml`, `.yaml` files extension:
 ```
-gendiff fileExample1.ini fileExample2.ini
+$ gendiff fileExample1.ini fileExample2.ini
 ```
 
 ![gendiff-ini](https://i.ibb.co/dkjnkGs/gendiff-ini.gif)
 
 ```
-gendiff fileExample1.yml fileExample2.yml
+$ gendiff fileExample1.yml fileExample2.yml
 ```
 ![gendiff-yml](https://i.ibb.co/p2sWJ1T/gendiff-yml.gif)
 
@@ -100,14 +100,14 @@ gendiff fileExample1.yml fileExample2.yml
 - `json`
 
 ```
-gendiff --format plain fileExample1.json fileExample2.json
+$ gendiff --format plain fileExample1.json fileExample2.json
 ```
 ![gendiff-format-plain](https://i.ibb.co/MVcHRjW/gendiff-format-plain.gif)
 [asciinema](https://asciinema.org/a/RctSCI6PRBJxxWOxAivR2rM62)
 
 **json**
 ```
-gendiff --format json fileExample1.json fileExample2.json
+$ gendiff --format json fileExample1.json fileExample2.json
 ```
 ![gendiff-format-json](https://i.ibb.co/G0KjjS1/gendiff-format-json.gif)
 [asciinema](https://asciinema.org/a/I1WfTGVpYdNx9aB7UvwhTmUKR)

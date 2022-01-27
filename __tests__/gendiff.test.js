@@ -61,7 +61,7 @@ const resultTree = (
     }
 }`);
 
-const resultPlain = (
+const resultPlainTree = (
   `Property 'common.follow' was added with value: false
 Property 'common.setting2' was removed
 Property 'common.setting3' was updated. From true to null
@@ -114,6 +114,7 @@ describe('Tree', () => {
     expect(gendiff(
       relativePathTo('beforeTree.json', 'json'),
       relativePathTo('afterTree.json', 'json'),
+      'stylish',
     ))
       .toBe(resultTree);
   });
@@ -126,15 +127,15 @@ describe('Plain', () => {
       relativePathTo('afterTree.json', 'json'),
       'plain',
     ))
-      .toBe(resultPlain);
+      .toBe(resultPlainTree);
   });
 });
 
 describe('JSON', () => {
   test('JSON format', () => {
     expect(gendiff(
-      relativePathTo('beforeTree.json', 'json'),
-      relativePathTo('afterTree.json', 'json'),
+      absolutePathTo('beforeTree.json', 'json'),
+      absolutePathTo('afterTree.json', 'json'),
       'json',
     ))
       .toBe(resultJson);
