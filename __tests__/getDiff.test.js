@@ -72,9 +72,7 @@ const resultIniFlat = [
 ];
 const resultNested = [
   {
-    key: 'common',
-    status: 'nested',
-    value: [
+    children: [
       {
         key: 'follow',
         status: 'added',
@@ -93,7 +91,10 @@ const resultNested = [
       {
         key: 'setting3',
         status: 'updated',
-        value: { before: true, after: null },
+        value: {
+          after: null,
+          before: true,
+        },
       },
       {
         key: 'setting4',
@@ -108,19 +109,20 @@ const resultNested = [
         },
       },
       {
-        key: 'setting6',
-        status: 'nested',
-        value: [
+        children: [
           {
-            key: 'doge',
-            status: 'nested',
-            value: [
+            children: [
               {
                 key: 'wow',
                 status: 'updated',
-                value: { before: '', after: 'so much' },
+                value: {
+                  after: 'so much',
+                  before: '',
+                },
               },
             ],
+            key: 'doge',
+            status: 'nested',
           },
           {
             key: 'key',
@@ -133,17 +135,22 @@ const resultNested = [
             value: 'vops',
           },
         ],
+        key: 'setting6',
+        status: 'nested',
       },
     ],
+    key: 'common',
+    status: 'nested',
   },
   {
-    key: 'group1',
-    status: 'nested',
-    value: [
+    children: [
       {
         key: 'baz',
         status: 'updated',
-        value: { before: 'bas', after: 'bars' },
+        value: {
+          after: 'bars',
+          before: 'bas',
+        },
       },
       {
         key: 'foo',
@@ -153,9 +160,16 @@ const resultNested = [
       {
         key: 'nest',
         status: 'updated',
-        value: { before: { key: 'value' }, after: 'str' },
+        value: {
+          after: 'str',
+          before: {
+            key: 'value',
+          },
+        },
       },
     ],
+    key: 'group1',
+    status: 'nested',
   },
   {
     key: 'group2',

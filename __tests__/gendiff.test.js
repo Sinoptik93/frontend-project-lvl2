@@ -37,23 +37,23 @@ const resultTree = (
       + baz: bars
         foo: bar
       - nest: {
-        key: value
+            key: value
       }
       + nest: str
     }
   - group2: {
-      abc: 12345
-      deep: {
-          id: 45
-      }
+        abc: 12345
+        deep: {
+            id: 45
+        }
     }
   + group3: {
-      deep: {
-          id: {
-              number: 45
-          }
-      }
-      fee: 100500
+        deep: {
+            id: {
+                number: 45
+            }
+        }
+        fee: 100500
     }
 }`);
 

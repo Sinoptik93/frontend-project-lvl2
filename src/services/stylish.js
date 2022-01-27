@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 const getObjectPlain = (item) => {
   console.log('getObj');
   return [JSON.stringify(item)];
@@ -20,15 +18,6 @@ const stringMaker = (level) => {
     removed: (key, value) => `${levelIndent}  - ${key}: ${value}`,
     added: (key, value) => `${levelIndent}  + ${key}: ${value}`,
     nested: (key, value) => `${levelIndent}    ${key}: ${value}`,
-    plain: (key, value) => {
-      const rawStringList = [];
-      rawStringList.push(`${key}: {`);
-      rawStringList.push(`    ${getObjectPlain(value)}`);
-      rawStringList.push('}');
-      const indentedRawList = rawStringList.map((rawString) => `${levelIndent}${rawString}`);
-      const resultString = indentedRawList.join('\n');
-      return resultString;
-    },
   };
 };
 
@@ -43,36 +32,20 @@ const stylish = (dataList, level = 0) => {
   const getString = stringMaker(level);
 
   dataList.forEach((data) => {
-    const { key, value, status } = data;
-    const isPlainObject = _.isPlainObject(value);
+    const {
+      key, value, children, status,
+    } = data;
 
-    if (isPlainObject) {
-      console.log(`isPlainObject=${isPlainObject}`);
-      console.log(JSON.stringify(value));
+    if (children) {
+      const topString = `${'    '.repeat(level + 1)}${key}: {`;
 
-      const test = stringMaker(level + 1);
-      const resultObject = test.plain(key, value);
-      result.push(resultObject);
-      return;
-    }
-
-    switch (status) {
-      case 'nested': {
-        const resultString = `${'    '.repeat(level + 1)}${key}: {`;
-        result.push(resultString);
-        result.push(stylish(value, level + 1).join('\n'));
-        result.push(`${'    '.repeat(level + 1)}}`);
-        break;
-      }
-      default:
-        result.push(getString[status](key, value));
-        break;
+      result.push(topString);
+      result.push(stylish(children, level + 1).join('\n'));
+      result.push(`${'    '.repeat(level + 1)}}`);
+    } else {
+      result.push(getString[status](key, value));
     }
   });
-
-  if (level === 0) {
-    console.log(level === 0);
-  }
 
   return level === 0
     ? `{\n${result.join('\n')}\n}`
