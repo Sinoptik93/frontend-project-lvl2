@@ -14,13 +14,15 @@ plugins:
   - fp
 rules:
   no-console: 0
-  fp/no-mutating-methods: "error"
+  fp/no-mutating-methods: 2
+  fp/no-unused-expression: 0
+  fp/no-nil: 0
   no-multiple-empty-lines: 1
   consistent-return: 1
-  array-callback-return: "error"
+  array-callback-return: 2
   import/extensions: 0
   max-len: [
-      "error",
+      2,
       {
         "code": 100,
         "ignoreComments": false
