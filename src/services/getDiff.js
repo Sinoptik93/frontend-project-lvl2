@@ -14,26 +14,44 @@ const getDiff = (file1, file2) => {
     const valueBefore = file1[key];
     const valueAfter = file2[key];
 
-    const result = { key };
-
     if (!_.has(file2, key)) {
-      result.value = valueBefore;
-      result.status = 'removed';
-    } else if (!_.has(file1, key)) {
-      result.value = valueAfter;
-      result.status = 'added';
-    } else if (_.isPlainObject(valueBefore) && _.isPlainObject(valueAfter)) {
-      result.children = getDiff(valueBefore, valueAfter);
-      result.status = 'nested';
-    } else if (!_.isEqual(valueBefore, valueAfter)) {
-      result.value = [valueBefore, valueAfter];
-      result.status = 'updated';
-    } else {
-      result.value = valueBefore;
-      result.status = 'unchanged';
+      return {
+        key,
+        value: valueBefore,
+        status: 'removed',
+      };
     }
 
-    return result;
+    if (!_.has(file1, key)) {
+      return {
+        key,
+        value: valueAfter,
+        status: 'added',
+      };
+    }
+
+    if (_.isPlainObject(valueBefore) && _.isPlainObject(valueAfter)) {
+      const children = getDiff(valueBefore, valueAfter);
+      return {
+        key,
+        status: 'nested',
+        children,
+      };
+    }
+
+    if (!_.isEqual(valueBefore, valueAfter)) {
+      return {
+        key,
+        value: [valueBefore, valueAfter],
+        status: 'updated',
+      };
+    }
+
+    return {
+      key,
+      value: valueBefore,
+      status: 'unchanged',
+    };
   });
 };
 
