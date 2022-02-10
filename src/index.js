@@ -1,20 +1,30 @@
-import stylish from './services/stylish.js';
+import path from 'path';
+import fs from 'fs';
 import getDiff from './services/getDiff.js';
-import getJsonFile from './services/getJsonFile.js';
-import getPlain from './services/plain.js';
+import parse from './services/parse.js';
+import format from './formatters/index.js';
 
-const formatter = {
-  stylish: (diffList) => stylish(diffList),
-  plain: (diffList) => getPlain(diffList),
-  json: (diffList) => JSON.stringify(diffList),
-};
+/**
+ * Get normalize file path.
+ * @param filePath{string}
+ * @returns {string}
+ * @example
+ * normalizePath('./filepath/targetFile.json') // usr/local/Desktop/filepath/targetFile.json
+ */
+const normalizePath = (filePath) => path.resolve(filePath);
+
+const readFile = (filePath) => fs.readFileSync(normalizePath(filePath), 'utf-8');
+
+const getFormat = (filePath) => path.extname(filePath).substring(1);
+
+const getData = (filePath) => parse(readFile(filePath), getFormat(filePath));
 
 const gendiff = (filepath1, filepath2, formatName = 'stylish') => {
-  const parsedFile1 = getJsonFile(filepath1);
-  const parsedFile2 = getJsonFile(filepath2);
+  const parsedFile1 = getData(filepath1);
+  const parsedFile2 = getData(filepath2);
 
   const diffResult = getDiff(parsedFile1, parsedFile2);
-  return formatter[formatName](diffResult);
+  return format(diffResult, formatName);
 };
 
 export default gendiff;
