@@ -20,37 +20,36 @@ const printValue = (value) => {
 
 /**
  * Get plain styled output.
- * @param diffList{{}[]}
+ * @param diffList{[{}]}
  * @return {*}
  */
 const getPlain = (diffList) => {
   const iter = (currentDiff, rootPath = []) => {
     const rawStringList = currentDiff.map((diffItem) => {
-      const resultPath = `${rootPath.join('')}${diffItem.key}`;
+      const {
+        key, value, status, children,
+      } = diffItem;
+      const resultPath = `${rootPath.join('')}${key}`;
 
-      switch (diffItem.status) {
-        case 'nested':
-          return `${iter(diffItem.children, rootPath.concat(diffItem.key, '.'))}`;
-        case 'unchanged':
-          break;
-        case 'added':
-          return `Property '${resultPath}' was added with value: ${printValue(diffItem.value)}`;
-        case 'removed':
-          return `Property '${resultPath}' was removed`;
-        case 'updated': {
-          const [beforeValue, afterValue] = diffItem.value;
+      const getStringWhich = {
+        unchanged: () => '',
+        added: () => `Property '${resultPath}' was added with value: ${printValue(value)}`,
+        removed: () => `Property '${resultPath}' was removed`,
+        nested: () => `${iter(children, rootPath.concat(key, '.'))}`,
+        updated: () => {
+          const [beforeValue, afterValue] = value;
+
           return `Property '${resultPath}' was updated. From ${
             printValue(beforeValue)
           } to ${
             printValue(afterValue)
           }`;
-        }
-        default:
-          break;
-      }
+        },
+      };
 
-      return null;
+      return getStringWhich[status]();
     });
+
     return rawStringList.filter((item) => item).join('\n');
   };
 
