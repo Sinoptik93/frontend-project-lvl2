@@ -23,8 +23,8 @@ const getDiff = (file1, file2) => {
       result.value = valueAfter;
       result.status = 'added';
     } else if (_.isPlainObject(valueBefore) && _.isPlainObject(valueAfter)) {
-      result.children = getDiff(valueBefore, valueAfter);
       result.status = 'nested';
+      result.children = getDiff(valueBefore, valueAfter);
     } else if (!_.isEqual(valueBefore, valueAfter)) {
       result.value = [valueBefore, valueAfter];
       result.status = 'updated';
