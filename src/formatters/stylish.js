@@ -1,14 +1,24 @@
 import _ from 'lodash';
 
 /**
+ * Get indent by depth value.
+ * @param indentDepth{number}
+ * @return {string}
+ */
+const formatIndent = (indentDepth) => {
+  const indentChar = ' ';
+  return indentChar.repeat(indentDepth);
+};
+
+/**
  * Stringify object by current indent.
  * @param object{{}}
  * @param nodeDepth{number}
  * @return {string}
  */
 const stringifyObject = (object, nodeDepth) => {
-  const innerIndent = _.repeat(' ', nodeDepth * 4 + 8);
-  const closeIndent = _.repeat(' ', nodeDepth * 4 + 4);
+  const innerIndent = formatIndent(nodeDepth * 4 + 8);
+  const closeIndent = formatIndent(nodeDepth * 4 + 4);
 
   const keys = Object.keys(object);
 
@@ -43,8 +53,8 @@ const getString = (value, depth) => (
  */
 const getStylish = (data) => {
   const iter = (currentData, depth) => {
-    const innerIndent = _.repeat(' ', depth * 4 + 2);
-    const closeIndent = _.repeat(' ', depth * 4);
+    const innerIndent = formatIndent(depth * 4 + 2);
+    const closeIndent = formatIndent(depth * 4);
 
     const mapper = (node) => {
       const {
