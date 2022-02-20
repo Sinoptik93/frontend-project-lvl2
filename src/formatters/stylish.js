@@ -6,11 +6,11 @@ import _ from 'lodash';
  * @param spaceWidth {number}
  * @return {string}
  */
-const indent = (depth, spaceWidth = 4) => {
-  return depth
+const indent = (depth, spaceWidth = 4) => (
+  depth
     ? ' '.repeat(depth * spaceWidth - 2)
-    : '';
-};
+    : ''
+);
 
 /**
  * Stringify object by current indent.
@@ -24,12 +24,29 @@ const stringify = (data, depth, mapping) => {
     return String(data);
   }
 
-  const resultString = Object.entries(data).map(([key, value]) => {
-    return mapping.unchanged({ key, value }, depth + 1);
-  });
+  const resultString = Object.entries(data).map(([key, value]) => (
+    mapping.unchanged({ key, value }, depth + 1)
+  ));
   return `{\n${resultString.join('\n')}\n${indent(depth)}  }`;
 };
 
+/**
+ * Get styled string.
+ * @type {
+ *   {
+ *     unchanged: (function(
+ *       node: {key: string, status: string, value: string}, depth: number): string),
+ *     added: (function(
+ *       node: {key: string, status: string, value: string}, depth: number): string),
+ *     removed: (function(
+ *       node: {key: string, status: string, value: string}, depth: number): string),
+ *     nested: (function(
+ *       node: {key: string, status: string, children: string}, depth: number,
+ *       iter: function): string),
+ *     updated: (function(
+ *       node: {key: string, status: string, value: string}, depth: number): string)}
+ *   }
+ */
 const mapping = {
   unchanged: (node, depth) => (
     `${indent(depth)}  ${node.key}: ${stringify(node.value, depth, mapping)}`

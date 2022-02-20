@@ -3,7 +3,7 @@
  * @param value{{}}
  * @return {string|*}
  */
-const printValue = (value) => {
+const stringifyValue = (value) => {
   const valueType = value === null ? 'null' : typeof value;
 
   switch (valueType) {
@@ -19,41 +19,62 @@ const printValue = (value) => {
 };
 
 /**
- * Get plain styled output.
- * @param diffList{[{}]}
- * @return {*}
+ * Get stringify path.
+ * @param rootPath{string}
+ * @param key{string}
+ * @return {`${string}${string}`}
  */
-const getPlain = (diffList) => {
-  const iter = (currentDiff, rootPath = []) => {
-    const rawStringList = currentDiff.map((diffItem) => {
-      const {
-        key, value, status, children,
-      } = diffItem;
-      const resultPath = `${rootPath.join('')}${key}`;
+const getPath = (rootPath, key) => `${rootPath}${key}`;
 
-      const getStringWhich = {
-        unchanged: () => '',
-        added: () => `Property '${resultPath}' was added with value: ${printValue(value)}`,
-        removed: () => `Property '${resultPath}' was removed`,
-        nested: () => `${iter(children, rootPath.concat(key, '.'))}`,
-        updated: () => {
-          const [beforeValue, afterValue] = value;
+/**
+ * Get styled string.
+ * @type {
+ *   {
+ *     unchanged: (function(): string),
+ *     removed: (function(resultPath: string): string),
+ *     added: (function(resultPath: string,
+ *       item: {key: string, status: string, value: string}): string),
+ *     nested: (function(resultPath: string,
+ *       item: {key: string, status: string, value: string}, iter: function): string),
+ *     updated: (function(resultPath: string,
+ *       item: {key: string, status: string, value: string}): string)
+ *   }
+ * }
+ */
+const mapping = {
+  unchanged: () => '',
+  added: (resultPath, item) => (
+    `Property '${resultPath}' was added with value: ${stringifyValue(item.value)}`
+  ),
+  removed: (resultPath) => `Property '${resultPath}' was removed`,
+  nested: (resultPath, item, iter) => `${iter(item.children, resultPath.concat('.'))}`,
+  updated: (resultPath, item) => {
+    const [beforeValue, afterValue] = item.value;
 
-          return `Property '${resultPath}' was updated. From ${
-            printValue(beforeValue)
-          } to ${
-            printValue(afterValue)
-          }`;
-        },
-      };
+    return `Property '${resultPath}' was updated. From ${
+      stringifyValue(beforeValue)
+    } to ${
+      stringifyValue(afterValue)
+    }`;
+  },
+};
 
-      return getStringWhich[status]();
+/**
+ * Get plain styled output.
+ * @param data{[{}]}
+ * @return {string}
+ */
+const getPlain = (data) => {
+  const iter = (currentDiff, rootPath = '') => {
+    const rawStringList = currentDiff.map((dataItem) => {
+      const resultPath = getPath(rootPath, dataItem.key);
+      return mapping[dataItem.status](resultPath, dataItem, iter);
     });
 
     return rawStringList.filter((item) => item).join('\n');
   };
 
-  return iter(diffList);
+  return iter(data);
 };
 
 export default getPlain;
