@@ -2,49 +2,70 @@ import _ from 'lodash';
 
 /**
  * Get indent by depth value.
- * @param indentDepth{number}
+ * @param depth{number}
+ * @param spaceWidth {number}
  * @return {string}
  */
-const formatIndent = (indentDepth) => {
-  const indentChar = ' ';
-  return indentChar.repeat(indentDepth);
-};
+const indent = (depth, spaceWidth = 4) => (
+  depth
+    ? ' '.repeat(depth * spaceWidth - 2)
+    : ''
+);
 
 /**
  * Stringify object by current indent.
- * @param object{{}}
- * @param nodeDepth{number}
+ * @param data{{}}
+ * @param depth{number}
+ * @param mapping{Object}
  * @return {string}
  */
-const stringifyObject = (object, nodeDepth) => {
-  const innerIndent = formatIndent(nodeDepth * 4 + 8);
-  const closeIndent = formatIndent(nodeDepth * 4 + 4);
+const stringify = (data, depth, mapping) => {
+  if (!_.isObject(data)) {
+    return String(data);
+  }
 
-  const keys = Object.keys(object);
-
-  const mapper = (key) => {
-    const value = object[key];
-
-    return _.isObject(value)
-      ? `${innerIndent}${key}: ${stringifyObject(object[key], nodeDepth + 1)}`
-      : `${innerIndent}${key}: ${object[key]}`;
-  };
-
-  const resultString = keys.map((key) => mapper(key)).join('\n');
-  return `{\n${resultString}\n${closeIndent}}`;
+  const resultString = Object.entries(data).map(([key, value]) => (
+    mapping.unchanged({ key, value }, depth + 1)
+  ));
+  return `{\n${resultString.join('\n')}\n${indent(depth)}  }`;
 };
 
 /**
- * Get styled string with depth indent.
- * @param value{string|{}}
- * @param depth{number}
- * @return {string}
+ * Get styled string.
+ * @type {
+ *   {
+ *     unchanged: (function(
+ *       node: {key: string, status: string, value: string}, depth: number): string),
+ *     added: (function(
+ *       node: {key: string, status: string, value: string}, depth: number): string),
+ *     removed: (function(
+ *       node: {key: string, status: string, value: string}, depth: number): string),
+ *     nested: (function(
+ *       node: {key: string, status: string, children: string}, depth: number,
+ *       iter: function): string),
+ *     updated: (function(
+ *       node: {key: string, status: string, value: string}, depth: number): string)}
+ *   }
  */
-const getString = (value, depth) => (
-  _.isObject(value)
-    ? stringifyObject(value, depth)
-    : value
-);
+const mapping = {
+  unchanged: (node, depth) => (
+    `${indent(depth)}  ${node.key}: ${stringify(node.value, depth, mapping)}`
+  ),
+  added: (node, depth) => (
+    `${indent(depth)}+ ${node.key}: ${stringify(node.value, depth, mapping)}`
+  ),
+  removed: (node, depth) => (
+    `${indent(depth)}- ${node.key}: ${stringify(node.value, depth, mapping)}`
+  ),
+  nested: (node, depth, iter) => (
+    `${indent(depth)}  ${node.key}: ${iter(node.children, depth)}`
+  ),
+  updated: (node, depth) => {
+    const [beforeValue, afterValue] = node.value;
+    return `${indent(depth)}- ${node.key}: ${stringify(beforeValue, depth, mapping)}\n`
+      + `${indent(depth)}+ ${node.key}: ${stringify(afterValue, depth, mapping)}`;
+  },
+};
 
 /**
  * Get tree styled output.
@@ -53,31 +74,10 @@ const getString = (value, depth) => (
  */
 const getStylish = (data) => {
   const iter = (currentData, depth) => {
-    const innerIndent = formatIndent(depth * 4 + 2);
-    const closeIndent = formatIndent(depth * 4);
-
-    const mapper = (node) => {
-      const {
-        key, value, status, children,
-      } = node;
-
-      const getStringWhich = {
-        unchanged: () => `${innerIndent}  ${key}: ${getString(value, depth)}`,
-        added: () => `${innerIndent}+ ${key}: ${getString(value, depth)}`,
-        removed: () => `${innerIndent}- ${key}: ${getString(value, depth)}`,
-        nested: () => `${innerIndent}  ${key}: ${iter(children, depth + 1)}`,
-        updated: () => {
-          const [beforeValue, afterValue] = value;
-          return `${innerIndent}- ${key}: ${getString(beforeValue, depth)}\n`
-          + `${innerIndent}+ ${key}: ${getString(afterValue, depth)}`;
-        },
-      };
-
-      return getStringWhich[status]();
-    };
-    const resultString = currentData.map((dataItem) => mapper(dataItem)).join('\n');
-
-    return `{\n${resultString}\n${closeIndent}}`;
+    const resultString = currentData.map(
+      (dataItem) => mapping[dataItem.status](dataItem, depth + 1, iter),
+    ).join('\n');
+    return `{\n${resultString}\n${indent(depth)}${depth ? '  ' : ''}}`;
   };
 
   return iter(data, 0);
