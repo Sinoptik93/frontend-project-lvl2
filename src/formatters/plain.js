@@ -3,7 +3,7 @@
  * @param value{{}}
  * @return {string|*}
  */
-const stringifyValue = (value) => {
+const stringify = (value) => {
   const valueType = value === null ? 'null' : typeof value;
 
   switch (valueType) {
@@ -44,7 +44,7 @@ const getPath = (rootPath, key) => `${rootPath}${key}`;
 const mapping = {
   unchanged: () => '',
   added: (resultPath, item) => (
-    `Property '${resultPath}' was added with value: ${stringifyValue(item.value)}`
+    `Property '${resultPath}' was added with value: ${stringify(item.value)}`
   ),
   removed: (resultPath) => `Property '${resultPath}' was removed`,
   nested: (resultPath, item, iter) => `${iter(item.children, resultPath.concat('.'))}`,
@@ -52,9 +52,9 @@ const mapping = {
     const [beforeValue, afterValue] = item.value;
 
     return `Property '${resultPath}' was updated. From ${
-      stringifyValue(beforeValue)
+      stringify(beforeValue)
     } to ${
-      stringifyValue(afterValue)
+      stringify(afterValue)
     }`;
   },
 };
