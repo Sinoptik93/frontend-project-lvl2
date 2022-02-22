@@ -48,7 +48,9 @@ const mapping = {
     `Property '${getPath(rootPaths, node.key)}' was added with value: ${stringify(node.value)}`
   ),
   removed: (node, rootPaths) => `Property '${getPath(rootPaths, node.key)}' was removed`,
-  nested: (node, rootPaths, iter) => node.children.flatMap((child) => iter(child, [...rootPaths, node.key], iter)),
+  nested: (node, rootPaths, iter) => (
+    node.children.flatMap((child) => iter(child, [...rootPaths, node.key], iter))
+  ),
   updated: (node, rootPaths) => {
     const [beforeValue, afterValue] = node.value;
 
