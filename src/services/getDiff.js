@@ -1,5 +1,6 @@
 import _ from 'lodash';
 
+
 /**
  * Get diff array.
  * @param itemBefore{JSON}
@@ -55,4 +56,9 @@ const getDiff = (itemBefore, itemAfter) => {
   });
 };
 
-export default getDiff;
+export default (itemBefore, itemAfter) => (
+  {
+    status: 'root',
+    children: getDiff(itemBefore, itemAfter),
+  }
+);
