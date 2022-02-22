@@ -10,7 +10,6 @@ Gendiff is CLI util for getting diffs between compared files.
 
 **Supported file extensions:**
 - `.json`
-- `.ini`
 - `.yml` | `.yaml`
 
 **Supported paths:**
@@ -81,13 +80,7 @@ $ gendiff rootFolder/path/to/the/fileExample1.json rootFolder/path/to/the/fileEx
 [asciinema](https://asciinema.org/a/3Rt2JpmpKFSuVxRR86jYEKJgr)
 
 
-3. Supported `.ini`, `.yml`, `.yaml` files extension:
-```
-$ gendiff fileExample1.ini fileExample2.ini
-```
-
-![gendiff-ini](https://i.ibb.co/dkjnkGs/gendiff-ini.gif)
-
+3. Supported `.yml`, `.yaml` files extension:
 ```
 $ gendiff fileExample1.yml fileExample2.yml
 ```
