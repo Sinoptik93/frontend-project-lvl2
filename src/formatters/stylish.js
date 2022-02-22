@@ -1,6 +1,5 @@
 import _ from 'lodash';
 
-
 /**
  * Get indent by depth value.
  * @param depth{number}

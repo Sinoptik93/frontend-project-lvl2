@@ -1,6 +1,5 @@
 import _ from 'lodash';
 
-
 /**
  * Get diff array.
  * @param itemBefore{JSON}
