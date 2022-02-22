@@ -55,4 +55,9 @@ const getDiff = (itemBefore, itemAfter) => {
   });
 };
 
-export default getDiff;
+export default (itemBefore, itemAfter) => (
+  {
+    status: 'root',
+    children: getDiff(itemBefore, itemAfter),
+  }
+);

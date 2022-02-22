@@ -3,14 +3,10 @@ import _ from 'lodash';
 /**
  * Get indent by depth value.
  * @param depth{number}
- * @param spaceWidth {number}
+ * @param spaceWidth {number} [4]
  * @return {string}
  */
-const indent = (depth, spaceWidth = 4) => (
-  depth
-    ? ' '.repeat(depth * spaceWidth - 2)
-    : ''
-);
+const indent = (depth, spaceWidth = 4) => ' '.repeat(depth * spaceWidth - 2);
 
 /**
  * Stringify object by current indent.
@@ -34,20 +30,31 @@ const stringify = (data, depth, mapping) => {
  * Get styled string.
  * @type {
  *   {
+ *     root: (function(
+ *       node: {key: string, status: string, children: []}, depth: number, iter: function
+ *     ): string),
  *     unchanged: (function(
- *       node: {key: string, status: string, value: string}, depth: number): string),
+ *       node: {key: string, status: string, value: string}, depth: number
+ *     ): string),
  *     added: (function(
- *       node: {key: string, status: string, value: string}, depth: number): string),
+ *       node: {key: string, status: string, value: string}, depth: number
+ *     ): string),
  *     removed: (function(
- *       node: {key: string, status: string, value: string}, depth: number): string),
+ *       node: {key: string, status: string, value: string}, depth: number
+ *     ): string),
  *     nested: (function(
- *       node: {key: string, status: string, children: string}, depth: number,
- *       iter: function): string),
+ *       node: {key: string, status: string, children: []}, depth: number, iter: function
+ *     ): string),
  *     updated: (function(
- *       node: {key: string, status: string, value: string}, depth: number): string)}
+ *       node: {key: string, status: string, value: string}, depth: number
+ *     ): string)}
  *   }
  */
 const mapping = {
+  root: ({ children }, depth, iter) => {
+    const output = children.flatMap((node) => mapping[node.status](node, depth + 1, iter));
+    return `{\n${output.join('\n')}\n}`;
+  },
   unchanged: (node, depth) => (
     `${indent(depth)}  ${node.key}: ${stringify(node.value, depth, mapping)}`
   ),
@@ -57,9 +64,10 @@ const mapping = {
   removed: (node, depth) => (
     `${indent(depth)}- ${node.key}: ${stringify(node.value, depth, mapping)}`
   ),
-  nested: (node, depth, iter) => (
-    `${indent(depth)}  ${node.key}: ${iter(node.children, depth)}`
-  ),
+  nested: ({ key, children }, depth, iter) => {
+    const output = children.flatMap((node) => mapping[node.status](node, depth + 1, iter));
+    return `${indent(depth)}  ${key}: {\n${output.join('\n')}\n${indent(depth)}  }`;
+  },
   updated: (node, depth) => {
     const [beforeValue, afterValue] = node.value;
     return `${indent(depth)}- ${node.key}: ${stringify(beforeValue, depth, mapping)}\n`
@@ -73,12 +81,7 @@ const mapping = {
  * @return {string}
  */
 const getStylish = (data) => {
-  const iter = (currentData, depth) => {
-    const resultString = currentData.map(
-      (dataItem) => mapping[dataItem.status](dataItem, depth + 1, iter),
-    ).join('\n');
-    return `{\n${resultString}\n${indent(depth)}${depth ? '  ' : ''}}`;
-  };
+  const iter = (node, depth) => mapping[node.status](node, depth, iter);
 
   return iter(data, 0);
 };

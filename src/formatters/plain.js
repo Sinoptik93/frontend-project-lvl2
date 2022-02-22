@@ -1,14 +1,14 @@
 /**
  * Get typed stringed value.
- * @param value{{}}
- * @return {string|*}
+ * @param value{any}
+ * @return {string|any}
  */
-const stringifyValue = (value) => {
-  const valueType = value === null ? 'null' : typeof value;
+const stringify = (value) => {
+  if (value === null) {
+    return 'null';
+  }
 
-  switch (valueType) {
-    case 'null':
-      return 'null';
+  switch (typeof value) {
     case 'string':
       return `'${value}'`;
     case 'object':
@@ -20,41 +20,52 @@ const stringifyValue = (value) => {
 
 /**
  * Get stringify path.
- * @param rootPath{string}
- * @param key{string}
- * @return {`${string}${string}`}
+ * @param parentPaths{[]}
+ * @param currentPath{string}
+ * @return {string}
  */
-const getPath = (rootPath, key) => `${rootPath}${key}`;
+const getPath = (parentPaths, currentPath) => [...parentPaths, currentPath].join('.');
 
 /**
  * Get styled string.
  * @type {
  *   {
- *     unchanged: (function(): string),
- *     removed: (function(resultPath: string): string),
- *     added: (function(resultPath: string,
- *       item: {key: string, status: string, value: string}): string),
- *     nested: (function(resultPath: string,
- *       item: {key: string, status: string, value: string}, iter: function): string),
- *     updated: (function(resultPath: string,
- *       item: {key: string, status: string, value: string}): string)
+ *     unchanged: (function(): []),
+ *     root: (function(
+ *       node: {key: string, status: string, children: []}, rootPaths: [], iter: function
+ *     ): string),
+ *     removed: (function(
+ *       node: {key: string, status: string, value: any}, rootPaths: []
+ *     ): string),
+ *     added: (function(
+ *       node: {key: string, status: string, value: any}, rootPaths: []
+ *     ): string),
+ *     nested: (function(
+ *        node: {key: string, status: string, children: []}, rootPaths: []
+ *     ): string),
+ *     updated: (function(
+ *       node: {key: string, status: string, value: [any]}, rootPaths: []
+ *     ): string)
  *   }
  * }
  */
 const mapping = {
-  unchanged: () => '',
-  added: (resultPath, item) => (
-    `Property '${resultPath}' was added with value: ${stringifyValue(item.value)}`
+  unchanged: () => [],
+  root: (node, rootPaths, iter) => node.children.flatMap((child) => iter(child, rootPaths, iter)),
+  added: (node, rootPaths) => (
+    `Property '${getPath(rootPaths, node.key)}' was added with value: ${stringify(node.value)}`
   ),
-  removed: (resultPath) => `Property '${resultPath}' was removed`,
-  nested: (resultPath, item, iter) => `${iter(item.children, resultPath.concat('.'))}`,
-  updated: (resultPath, item) => {
-    const [beforeValue, afterValue] = item.value;
+  removed: (node, rootPaths) => `Property '${getPath(rootPaths, node.key)}' was removed`,
+  nested: (node, rootPaths, iter) => (
+    node.children.flatMap((child) => iter(child, [...rootPaths, node.key], iter))
+  ),
+  updated: (node, rootPaths) => {
+    const [oldValue, newValue] = node.value;
 
-    return `Property '${resultPath}' was updated. From ${
-      stringifyValue(beforeValue)
+    return `Property '${getPath(rootPaths, node.key)}' was updated. From ${
+      stringify(oldValue)
     } to ${
-      stringifyValue(afterValue)
+      stringify(newValue)
     }`;
   },
 };
@@ -65,16 +76,8 @@ const mapping = {
  * @return {string}
  */
 const getPlain = (data) => {
-  const iter = (currentDiff, rootPath = '') => {
-    const rawStringList = currentDiff.map((dataItem) => {
-      const resultPath = getPath(rootPath, dataItem.key);
-      return mapping[dataItem.status](resultPath, dataItem, iter);
-    });
-
-    return rawStringList.filter((item) => item).join('\n');
-  };
-
-  return iter(data);
+  const iter = (node, rootPaths) => mapping[node.status](node, rootPaths, iter);
+  return iter(data, []).join('\n');
 };
 
 export default getPlain;
